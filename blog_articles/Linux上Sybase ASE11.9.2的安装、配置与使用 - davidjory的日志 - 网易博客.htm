@@ -1,0 +1,1252 @@
+
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta http-equiv="content-type" content="text/html;charset=gbk"/>
+    <meta http-equiv="content-style-type" content="text/css"/>
+    <meta http-equiv="content-script-type" content="text/javascript"/>
+    <meta name="version" content="neblog-1.0"/>
+    <script type="text/javascript">
+      
+      
+      document.uniqueID!=document.uniqueID&&!!location.hash&&(location.hash=location.hash); 
+      document.domain = location.hostname.replace(/^.*\.([\w]+\.[\w]+)$/,'$1');
+      window.focus();
+      window.getMusicTimeStamp=function(){return '44cab045461a2e1764a770c10c273874';};
+    
+      //BLOG-647:博客OS服务不稳定，导致页面加载很慢
+      (function(){
+        window.setTimeout(function(){
+          var _loginUserIcon = document.getElementById('loginUserIcon');
+          var _rsavatarimg = document.getElementById('rsavatarimg');
+          if(!!_loginUserIcon){
+            var _loaded1 = false;
+            var _img1 = new Image();
+            _img1.onload = function(){
+                _loaded1 = true;
+                _img1.onload = null;
+            };
+            _img1.src = _loginUserIcon.src;
+            window.setTimeout(function(){
+              if(!_loaded1){
+                _img1.src = '';
+                _loginUserIcon.src = location.f60 || 'http://b.bst.126.net/common/face60.png';
+              }
+            },1000);
+          }
+          
+          if(!!_rsavatarimg){
+           var _loaded2 = false;
+           var _img2 = new Image();
+            _img2.onload = function(){
+                _loaded2 = true;
+                _img2.onload = null;
+            };
+            _img2.src = _rsavatarimg.src;
+            window.setTimeout(function(){
+              if(!_loaded2){
+                _img2.src = '';
+                _rsavatarimg.src = location.f140 || 'http://b.bst.126.net/common/face140.png';
+              }
+            },1000);
+          }
+          
+        },1000);
+      })()
+      
+    </script>
+<title>Linux上Sybase ASE11.9.2的安装、配置与使用 - davidjory的日志 - 网易博客</title>
+<meta name="author" content="zwssd1980,davidjory"/>
+<meta name="keywords" content="Linux上Sybase ASE11.9.2的安装、配置与使用,日志,davidjory,伟的博客,网易博客,网易,blog"/>
+<meta name="description" content="Linux上Sybase ASE11.9.2的安装、配置与使用,davidjory的网易博客,生活、技术、点点滴滴(其实我挺聪明的，就是人有点傻),"/>
+  <script type="text/javascript">
+    (function(){
+     var R=24,C=11,a=[];
+     for(var i=0;i<C;i++)for(var j=0;j<R;a.push('.icn0-'+i+j+'{background-position:'+(i>0?('-'+i*40+'px'):'0')+' '+(j>0?('-'+j*20+'px'):'0')+';}'),j++);
+          var P=16,R=3,C=7;
+     for(var p=1;p<P;a.push('.nbw-thm .tp'+p+'{background:url(http://b.bst.126.net/newpage/style/nblog/pages/page'+p+'.jpg'+(p>(P-3)?'?t=20100617':'')+') no-repeat;}'),p++);
+     for(var r=0;r<R;r++)for(var c=0;c<C;a.push('.nbw-thm .ti'+(c+r*C)+'{background-position:-'+(20+c*100)+'px -'+(18+r*95)+'px;}'),c++);
+     document.write('<style type="text/css">'+a.join('')+'</st'+'yle>');
+    })();
+  </script>
+    <link type="text/css" rel="stylesheet" href="http://b2.bst.126.net/newpage/r/c/c.css?v=1484551956519"/>
+    <link type="text/css" rel="stylesheet" href="http://os.blog.163.com/style/css/diy/109612735/3029649/-1423729529635/b.css?v=1" id="blog-163-com-theme"/>
+  <!--[if lte IE 6]>
+  <style type="text/css">
+    html,body,#blog-163-com-ie6body{height:100%;width:100%;overflow:hidden;}
+    #blog-163-com-ie6body{overflow:auto;overflow-y:scroll;}
+    #blog-163-com{background:none;}
+  </style>
+  <![endif]-->
+  
+  
+  <style type="text/css">.m-3 .nbw-ryt .left .mcnt{padding-left:10px;}.m-3 .nbw-ryt .right .acts{position:relative;margin:0 0 12px 0;line-height:20px;}.m-3 .nbw-ryt .right .more{margin-top:-15px;height:24px;line-height:24px;}#blog-163-com .m-3 .phide{display:none;}.m-3 .nbw-ryt .left .nbw-bitm{margin:0;padding:0 10px 0 10px;position:relative;}.m-3 .nbw-ryt .left .nbw-bitm .title{margin:30px 0 20px;line-height:32px;}.m-3 .nbw-ryt .left .nbw-bitm .title .tcnt{font-size:26px;font-weight:bold;font-family:"Hiragino Sans GB W3","Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",Arial,Helvetica,simsun,"\5B8B\4F53";}.m-3 .nbw-ryt .left .nbw-bitm .tdep{margin-bottom:20px;}.m-3 .nbw-ryt .left .nbw-bitm .tbar{margin:5px 0;padding:10px 0 10px 0;line-height:20px;text-align:right;}.m-3 .nbw-ryt .left .nbw-bitm .bct{font-size:16px;padding-left:0}.m-3 .nbw-ryt .left .nbw-bitm .muava{float:left;margin:5px 7px 0 0;border-width:0 1px 0 0;height:40px;}.m-3 .nbw-ryt .left .snl .pnb div{line-height:20px;text-align:left;}.m-3 .nbw-ryt .cite{margin:20px 0 0 50px;line-height:24px;text-align:left;}.m-3 .nbw-ryt .cite .close{float:right;margin:0;text-align:right;}.m-3 .nbw-ryt .cite span{cursor:pointer;}.m-3 .nbw-ryt .cite .nbw-act{text-align:center;}.m-3 .nbw-ryt .cite .ads{margin-left:20px;width:400px;}.m-3 .nbw-ryt .cite .tbac{margin-left:60px;padding:0;border:0;list-style:none;line-height:24px;}.m-3 .nbw-ryt .cite .tbl{width:150px;overflow:hidden;}.m-3 .nbw-ryt .cite .tbr{margin-left:20px;overflow:hidden;}.m-3 .nbw-act-share{position:relative;}.m-3 .nbw-act-share .nas-wrap{visibility:hidden;}.m-3 .nbw-act-share:hover .nas-wrap,.m-3 .js-share-hover .nas-wrap{visibility:visible;}.m-3 .nas-wrap,.nas-itm,.nas-wb{background:url(/newpage/images/blog/icn-share.png?0011) no-repeat 9999px 9999px;}.m-3 .nas-wrap{margin-top:5px;}.nas-itm,.nas-wb{text-decoration:none;}.nas-itm,.nas-wb:hover{text-decoration:underline;}.m-3 .nas-itm{float:left;width:16px;height:16px;margin:0 1px 0 6px;overflow:hidden;cursor:pointer;}.m-3 .nas-itm0{background-position:0 -173px;}.m-3 .nas-itm1{background-position:0 -56px;}.m-3 .nas-itm2{background-position:0 -85px;}.m-3 .nas-itm3{background-position:0 -227px;}.m-3 .nas-itm4{background-position:0 -143px;}.m-3 .nas-itm5{background-position:0 -201px;}.m-3 .nas-itm6{background-position:0 -249px;}.m-3 .nas-itm7{background-position:0 -283px;}.m-3 .nas-itm8{background-position:0 -313px;}.m-3 .nas-itm9{background-position:0 -342px;}.nas-wb{padding-left:20px;cursor:pointer;line-height:normal;background-position:0 -173px;}.nas-icn0fix{margin-top:4px;}.nas-tofix{margin-top:0;*margin-top:2px;line-height:25px;}.m-3 .ptc{position:absolute;cursor:pointer;}.m-3 .ptc .ptcp .bcmimg{float:left;background-image:url("http://b.bst.126.net/newpage/images/blogcmtimg.png");background-position:0 0;background-repeat:no-repeat;height:22px;line-height:22px;width:22px;padding:0 6px 0 0;}.m-3 .ptc .ptcp{cursor:pointer;position:absolute;left:5px;bottom:5px;clear:both;width:94px;}.m-3 .ptc .ptcp .ptcmi{float:left;width:16px;height:16px;padding:3px 6px 3px 5px;_padding:2px 6px 0 3px;margin:0;}.m-3 .ptc .ptcp .ptcmt{background-position:-418px -50px;float:left;width:67px;height:22px;overflow:hidden;margin:0px 0 0 -3px;line-height:22px;*line-height:23px;text-align:left;color:#444444;}.m-3 .ptc .ptcp .ptcmt-2{width:61px;padding-left:6px;background-position:-424px -50px;}.m-3 .relateblog{text-align:left;}.m-3 .relateblog h4{margin:0;padding:0 0 0 10px;line-height:30px;}.m-3 .relateblog .cnt{padding-left:8px;margin:10px 0 10px 0px;}.m-3 .relateblog .cnt ul{margin:0;padding:0;list-style:none;}.m-3 .relateblog .cnt ul li{height:24px;margin-right:20px;line-height:24px;}.m-3 .relateblog .cnt ul li span{margin:0 8px;}.m-3 .author, .m-3 .comment{text-align:left;}.m-3 .author .nlogif{width:150px;line-height:20px;margin-left:5px;_margin-left:3px;}.m-3 .author .nlogif .nbw-fce{margin:0 3px 0 10px;_margin-left:5px}.m-3 .author .nlogif .pright{width:85px;margin:0;padding:5px 0;_padding-top:10px}.m-3 .nbw-ryt .right h4{margin:0;padding:0;line-height:30px;}.m-3 .author h4, .m-3 .comment h4{margin:0;padding:0 0 0 10px;line-height:30px;}.m-3 .author .cwd{border:0;text-align:left;}.m-3 .author .vname{width:50px;text-align:center;}.m-3 .author .cnt{margin:10px 0 10px -5px;}.m-3 .author .nbw-fce{margin:0 11px;}.m-3 .author .nbw-f50{width:50px}.m-3 .nbw-ryt .left .top{position:relative;padding-bottom:5px;line-height:20px;}.m-3 .nbw-ryt .left .top .ilft{position:absolute;left:0;top:0;}.m-3 .nbw-ryt .left .top .irgt{position:absolute;right:-10px;top:0;}.m-3 .nbw-ryt .left .top .pleft{margin-left:20px;_margin-left:10px;overflow:hidden;width:40%;height:20px;text-align:left}.m-3 .nbw-ryt .left .top .pright{margin-right:10px;_margin-right:5px;overflow:hidden;width:40%;height:20px;text-align:right}.m-3 .nbw-ryt .left .snl .top{position:relative;padding:5px 0 15px 0;line-height:20px;}.m-3 .nbw-ryt .left .snl .top .ilft{position:absolute;left:-10px;top:5px;}.m-3 .nbw-ryt .left .snl .top .irgt{position:absolute;right:-10px;top:5px;}.m-3 .nbw-ryt .left .snl .top .pleft{margin-left:10px;_margin-left:5px;overflow:hidden;width:40%;height:20px;text-align:left}.m-3 .nbw-ryt .left .snl .top .pright{margin-right:10px;_margin-left:5px;overflow:hidden;width:40%;height:20px;text-align:right}.m-3 .nbw-ryt .left .snl .pnb{padding:5px 0 10px 10px;overflow:hidden;_width:100%}.m-3 .comment h4{padding:0 0 0 10px}.m-3 .comment .publish{margin:10px 0;padding:0 0 10px 5px;text-align:left;}.m-3 .comment .publish .nbw-fce{padding-top:0;}.m-3 .comment .publish .nbw-fce .cwd{border:0;}.m-3 .comment .publish .redt{margin-left:65px;}.m-3 .comment .nolog{border:1px solid #000;background-color:#FFFFE1;height:40px;line-height:40px;text-align:center;padding:0;_padding:10px 0;_height:20px;}.m-3 .comment .case{padding-left:5px;padding-bottom:10px;}.m-3 .comment .vgl{margin:8px;width:75%;text-align:center;}#blog-163-com .m-3 .comment .nbw-cmt .cnt{width:488px;}#blog-163-com .m-3 .comment .nbw-cmt .nbw-cmt .cnt{width:444px;}.m-3 .edt-cmt{width:444px;}.m-3 .comment .publish .edt-cmt{width:488px;}.m-3 .comment .publish .edt-cmt .zbcc{display:none;}.m-3 .nbw-ryt .left .nbw-bitm .js-fs0{font-size:150%;}.m-3 .nbw-ryt .left .nbw-bitm .js-fs1, .m-3 .nbw-ryt .left .nbw-bitm .js-fs1 *{font-size:20px;}.m-3 .nbw-ryt .left .nbw-bitm .js-fs2{}.m-3 .nbw-ryt .left .nbw-bitm .js-fs3, .m-3 .nbw-ryt .left .nbw-bitm .js-fs3 *{font-size:12px;}.m-3 .js-fcurrent{font-color:#000;font-weight:bold;text-decoration:none;}.m-3 .nbw-bitm .dream{margin-top:-10px;clear:both}.m-3 .nbw-bitm .cited{margin-top:-15px;}.m-3 .nbw-bitm .rdif{line-height:24px;height:24px;}.m-3 .nbw-bitm .rdif .pnt{line-height:24px;height:24px;margin-right:10px;}.m-3 .nbw-bitm .rdif .pclass{vertical-align:middle;width:57px;height:22px;}.m-3 .nbw-bitm .rdif .rdct{display:inline-block;}.m-3 .snl .rdcnt{padding:5px;text-align:left}.m-3 .snl .rdcnt .nbw-fce{margin:0 5px}.m-3 .snl .rdcnt p{margin:10px 0}.m-3 .snl .rdcnt .rrb{list-style:none;height:22px;line-height:22px;}.m-3 .acts .iblock{width:18px;}.m-3 .ns{margin:0 0 0 2px;}.m-3 .cancel{display:none;}.m-3 .js-hover .cancel, .m-3 .follow:hover .cancel, .m-3 .frd:hover .cancel{display:inline;}.m-3 .follow{*margin-left:2px;}.m-3 .flw{padding:7px 8px;color:#000;background:#fefce4;border:1px solid #b7b7b7;}.m-3 .acts .flw .iblock{width:20px;}.m-3 .sntesctf{width:15px;margin-left:3px;}.dr-warm{width:420px;padding:12px 18px;margin:18px 0;line-height:20px;border:1px solid #aaa;color:#666;background:#ffffdc;}.dr-warm a,.dr-warm a:hover{text-decoration:underline;color:#02a;}.dr-warm .codeinput{width:70px;text-align:center;}.dr-warm .codediv{margin:10px 0 0;}.dr-warm .ml{margin:0px 10px;vertical-align:middle;}.dr-warm .button{background-color:#77716F;width:42px;height:20px;border:0 none;color:#fff;cursor:pointer;}.m-3 .commentcntwrap{position:relative;zoom:1;}.m-3 .cmtMultiUserRole{position:absolute;left:62px;bottom:5px;width:300px;overflow-x;hidden;}.m-3 .cmtMultiUserRole .selectRole{float:right;padding:1px 1px 0 1px;border:none;}.m-3 .cmtMultiUserRole .selectRole .ztxt{float:left;width:auto;overflow:hidden;}.m-3 .cmtMultiUserRole .selectRole .zdwn{float:left;background:url("/newpage/images/icon.png") -240px -420px no-repeat;text-indent:-9999px;}.m-3 .cmtMultiUserRole .selectRole .zlst .zitm{}.m-3 .cmtMultiUserRole .selectRole .zlst .zitm:hover, .m-3 .cmtMultiUserRole .selectRole .slst .item.js-zhvr-910{color:#333;background-color:#ececec;}.m-3 .nbw-cmt{position:static;}.m-3 .nbw-cmt .thde{position:relative;zoom:1;}.m-3 .publish .redt{position:relative;zoom:1;}.m-3 .publish .redt .cmtMultiUserRole{left:135px;_left:132px;}.m-3 .cmtMultiUserRole .js-showlist{padding:0;margin:0;border-style:solid;border-width:1px 1px 0 1px;border-color:#aaa;}.m-3 .cmtMultiUserRole .js-showlist .zlst{border-style:solid;border-width:0 1px 1px 1px;border-color:#aaa;}.m-3 .multiuserItem{}.m-3 .multiuserItem .author{margin-right:-50px;}.m-3 .multiuserItem .multicntwrap{padding:30px 0 20px 0;}.m-3 .multiuserItem .multicnt{_padding-top:2px;margin-left:50px;}.m-3 .nbw-ryt .left .multiuserItem .multicnt .title{width:95%;margin-top:0;margin-bottom:0;}.m-3 .nbw-ryt .left .multiuserItem .multicnt .tdep{margin-bottom:0;}.m-3 .attachment{margin-bottom:20px;}.m-3 .awidth{width:40px;}.m-3 .view{margin-right:10px;}.m-3 .nbw-cmt .op{height:18px;line-height:18px;}.m-3 .suggestedreading{overflow:hidden;position:relative;zoom:1;}.m-3 .suggestedreading .m-list{margin-left:0;padding-left:15px;overflow:hidden;font-size:14px;}.m-3 .suggestedreading .m-list .gap{margin-left:8px;color:#ADADAD;}.m-3 .suggestedreading .m-list li{height:20px;padding:3px 0 2px;vertical-align:middle;}.m-3 .suggestedreading .wrap li{float:left;width:118px;height:146px;}.m-3 .suggestedreading .suggesteditem1{line-height:24px;margin:5px 0;font-size:12px;margin-right:10px;}.m-3 .suggestedreading .suggesteditem2{margin:5px 0;font-size:12px;}.m-3 .suggestedreading .suggesteditem2 .imgwrap1{position:relative;overflow:hidden;width:90px;height:90px;zoom:1;}.m-3 .suggestedreading .suggesteditem2 .imgwrap2{z-index:2;position:absolute;left:0;top:0;}.m-3 .suggestedreading .suggesteditem2 .btitle{width:96px;height:148px;overflow:hidden;text-decoration:none;}.m-3 .suggestedreading .suggesteditem2 .sep{padding:5px 10px 0 10px;}.m-3 .suggestedreading .suggesteditem2 a{cursor:pointer;}.m-3 .suggestedreading .suggesteditem2 a:hover{text-decoration:none;}.m-3 .suggestedreading .suggesteditem2 img{border-width:0;}.m-3 .suggestedreading .color1{background-color:#B3786B;}.m-3 .suggestedreading .color2{background-color:#D2C1A8;}.m-3 .suggestedreading .color3{background-color:#D46646;}.m-3 .suggestedreading .color4{background-color:#D28FA8;}.m-3 .suggestedreading .color5{background-color:#C84F54;}.m-3 .suggestedreading .white{color:white;}.m-3 .suggestedreading .imgtip{margin:2px;font-weight:bold;color:white;font-size:13px;}.m-3 .suggestedreading .borderwrap{padding:2px;background-color:#fff;}.m-3 .suggestedreading .time{position:absolute;bottom:0;right:0;}.m-3 .suggestedreading .hidsep{margin-left:-1px;}.m-3 .suggestedreading .srtitle{font-size:14px;font-weight:bold;margin-bottom:10px;}.m-3 #yodaoad{padding-left:5px;}.m-3 #yodaoad_3{padding:20px 0 25px 0;}.m-3 .relategroup{width:45%}.m-3 .blogvote{padding-left:35px;position:relative;zoom:1;}.m-3 .blogvote .sep{margin:0 5px;}.m-3 .blogvote .vtitle{margin:15px 0 15px -30px;}.m-3 .blogvote .vtitle span{padding-right:8px;}.m-3 .blogvote .vtitle .close{width:60px;height:24px;vertical-align:middle;}.m-3 .blogvote .roleview{padding-right:10px}.m-3 .blogvote .roleview .iblock{width:10px}.m-3 .blogvote .options{clear:both;margin-right:10px}.m-3 .blogvote .options ul{margin:0;padding:0;list-style:none;}.m-3 .blogvote .options ul li{padding:10px 0;line-height:16px;}.m-3 .blogvote .options .role{margin-bottom:15px;}.m-3 .blogvote .options .acts{margin-bottom:15px;height:24px;line-height:26px;}.m-3 .blogvote .options .acts .leftpt{height:24px;line-height:26px;}.m-3 .blogvote .options .acts .leftpt button{height:24px;line-height:18px;}.m-3 .blogvote .options .acts .leftpt span{}.m-3 .blogvote .options .acts .view{margin-left:5px;}.m-3 .blogvote .fvote{padding-top:10px;}.m-3 .blogvote .fvote ul{list-style:none;margin:10px 0;padding:0;}.m-3 .blogvote .fvote ul li{line-height:20px;margin:5px 0;}.m-3 .blogvote .options ul .col0{width:230px;margin-right:10px;margin-top:-3px;_margin-top:-5px;line-height:20px}.m-3 .blogvote .options ul .col0 input{_position:relative;_top:3px}.m-3 .blogvote .options ul .col0 label{width:200px;_position:relative;_top:4px}.m-3 .blogvote .options ul .col1{width:190px;height:14px;line-height:14px;;background:none repeat scroll 0 0 #EAEAEA;}.m-3 .blogvote .options ul .col1 .iblock{width:100%;height:16px;vertical-align:middle;}.qing001{margin:0;border:none;}.qing001 .nb-mc{background:none;}.qing001 .nb-mc .cc{width:942px;padding:0;margin:0 auto;}.qing001 .nb-mc .cl{display:none;}.qing001 .nb-mc .cr{display:none;}.qing001 .bh{display:none;}.qing001 .nbw-ryt{background:url(/newpage/images/qingtheme/qing001/blogdetail_cntbg.png) 0 0 repeat-y;}.qing001 .nbw-ryt .left{background:url(/newpage/images/qingtheme/qing001/blogdetail_ftbg.png) bottom left no-repeat;}.qing001 .nbw-ryt .left .lcnt{width:100%;padding:0;margin:0;background:url(/newpage/images/qingtheme/qing001/blogdetail_ttlbg.png) 0 0 no-repeat;}.qing001 .nbw-ryt .left .mcnt{padding:0 30px;}.qing001 .nbw-ryt .left .nbw-bitm{padding:0;}.qing001 .nb-mt{display:none;}.qing001 .nbw-ryt .left .top{display:none;}.qing001 .nbw-ryt .left .nbw-bitm .title{height:31px;padding:30px 0 46px 3px;margin:0;}.qing001 .nbw-ryt .left .nbw-bitm .title .tcnt{color:#fffadc;font-size:24px;}.qing001 .nbw-ryt .left .nbw-bitm .tdep{padding-top:6px;}.qing001 .comment .case{padding-bottom:40px;}.m-3 .article .douban{float:left;width:200px;margin:0 10px 10px 0;font-size:12px;}.m-3 .article .douban .field{padding-top:5px;}.m-3 .article .douban .field .dbyinyue{width:10px;height:8px;border-width:0;}.m-3 .article .douban img{max-width:100%;width:100%;border-color:#e9e9e9;display:inline-block;border-width:1px;border-style:solid;}.m-3 .article-1 .douban{float:right;width:200px;margin:0 3px 10px 10px;}.m-3 .article-2 .douban{float:left;width:250px;margin:0 -250px 0 0;}.m-3 .article-2 .blog{margin-left:270px;}.m-3 .article-2 .blogc{width:99%;overflow:hidden;}.m-3 .article-3 .douban{float:right;width:250px;margin:0 3px 0 -250px;}.m-3 .article-3 .blog{margin-right:270px;}.m-3 .article-3 .blogc{width:99%;overflow:hidden;}.m-3 .vote_star{overflow:visible;}.m-3 .rateword{display:none;left:88px;width:37px;top:-2px;position:absolute;line-height:23px;}.m-3 .star_d0 .rateword0{display:inline;}.m-3 .star_d1 .rateword1{display:inline;}.m-3 .star_d2 .rateword2{display:inline;}.m-3 .star_d3 .rateword3{display:inline;}.m-3 .star_d4 .rateword4{display:inline;}.m-3 .star_d5 .rateword5{display:inline;}.m-3 .nbw-act .blogsep{margin:0 2px}.m-3 .zihao{position:relative;cursor:default;}.m-3 .zihaoshow{position:absolute;width:26px;top:-57px;left:-3px;padding:0 0 3px;line-height:18px;}.m-3 .zihaoshow span{display:block;text-align:center;cursor:pointer;}.m-3 .zihaoc{border-style:solid;border-width:1px;}.m-3 .mbga{margin-bottom:12px;position:relative;}.m-3 .mbga a{margin-left:20px;}.m-3 .mbgai{position:absolute;top:-1px;width:17px;background:url(/newpage/images/microblog.png?1) no-repeat;_background:none transparent;_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://b2.bst.126.net/newpage/images/microblog.png');_zoom:1;}.m-3 .mingxing{width:18px;background-position:-43px -80px;}.m-3 .xinxing{width:18px;background-position:-81px -80px;}.m-3 .darendesc{padding:7px 15px;margin-top:10px;line-height:18px;background:#efeae7;vertical-align:middle;}.m-3 .js-cmt-noavatar .nbw-cmt .nbw-fce{display:none;}.m-3 .js-cmt-noavatar .nbw-cmt .thde{padding-left:8px;margin-left:0;}.m-3 .js-cmt-noavatar .nbw-cmt .reps .thde{margin-left:55px;}.m-3 .toLofter{cursor:pointer;position:absolute;bottom:5px;width:112px;height:22px;background:url(/newpage/images/publishtolofter/tolofter.png?v=20130909) 0 0 no-repeat;text-indent:-9999px;}.m-3 .nbw-ryt .left .lcnt{padding-right:20px;}.m-3 .edt-cmt{width:auto;}.m-3 .comment .publish .edt-cmt{width:auto;}#blog-163-com .m-3 .comment .nbw-cmt .cnt{width:auto;}#blog-163-com .m-3 .comment .nbw-cmt .nbw-cmt .cnt{width:auto;}.m-3 .nbw-cmt .nbw-cmt{padding:20px 5px 1px 0;}.m-3 .nbw-cmt .op{height:18px;line-height:18px;margin-bottom:18px;}.m-3 .nbw-ryt .left .nbw-bitm .title{margin:34px 0 10px;line-height:normal;}.m-3 .nbw-ryt .left .nbw-bitm .title .tcnt{line-height:38px;}.m-3 .nbw-ryt .left .nbw-bitm .tdep{margin-bottom:25px;}.m-3 .comment .publish{padding:0 5px 10px 0;margin:20px 0 0 0;}.m-3 .nbw-sdt .miniBlogArea{bottom:12px;}.m-3 .nbw-sdt .edt .zbtn{height:40px;line-height:40px;}.m-3 .nbw-sdt .edt .zbtn .zfce{top:10px;}.m-3 .nas-tofix{line-height:24px;}.m-3 .nas-wrap{margin-top:4px;}.m-3 .leftoperatebar{height:24px;line-height:24px;padding:8px 0;}.m-3 .nbw-bitm .rdif{padding:8px 0;}.m-3 .leftoperatebar .sep-last{margin-right:8px;}.m-3 .rightoperatebar{height:40px;line-height:40px;margin-left:0px;}.m-3 .reblogbtn, .m-3 .recommendbtn, .m-3 .likebtn{width:48px;height:38px;line-height:38px;padding-left:44px;margin:0 0 0 5px;font-size:14px;color:#fff;text-align:left;}.m-3 .reblogbtn{background-position:1px -431px;}.m-3 .recommendbtn{background-position:1px -271px;}.m-3 .js-recommended{background-position:1px -351px;}.m-3 .likebtn{background-position:1px -111px;}.m-3 .js-liked{background-position:1px -191px;}.m-3 .hotarea{}.m-3 .hotarea .hotItem{position:relative;zoom:1;display:block;float:left;}.m-3 .hotarea .hotItem .hottype{position:absolute;right:-5px;top:29px;width:20px;height:20px;text-decoration:none;}.m-3 .hotarea .hotItem .js-liketype{background-position:-4px -536px;}.m-3 .hotarea .hotItem .js-reblogtype{background-position:-4px -648px;}.m-3 .hotarea .hotItem .js-sharetype{background-position:-4px -592px;}.m-3 .hotarea .expandHotItem{}.m-3 .hotarea .expeadbg{width:40px;height:40px;margin:0 auto;background-position:-2px -728px;cursor:pointer;}.js-openlikewin .showhint .zcvr{background:#000;opacity:0.5;filter:alpha(opacity=50);}.f-openlikeicon{background:url(/newpage/images/liketolofter/openlike24.png) -9999px -9999px no-repeat;_background:url(/newpage/images/liketolofter/openlike8.png) -9999px -9999px no-repeat;}#blog-163-com #blog-163-com-layer div.openlikewin{border:none;}.openlikewin .nbwinwrap .ztbr, .openlikewin .nbwinwrap .zcls, .openlikewin .nbwinwrap .zext, .openlikewin .nbwinwrap .zbtnbar{display:none;}.openlikewin .nbwinwrap .zcnt{padding:0;}.openlikewin .hdarea{position:relative;zoom:1;width:500px;height:145px;padding-top:30px;background:#d6e6f1;}.openlikewin .hdarea .tticon{width:86px;height:73px;margin:0 auto;background-position:-8px -111px;}.openlikewin .hdarea .ttcnt{height:60px;line-height:60px;color:#333;font-size:25px;}.openlikewin .hdarea .close{position:absolute;right:10px;top:10px;width:21px;height:21px;background-position:-6px -720px;cursor:pointer;}.openlikewin .bdarea{padding-bottom:40px;}.openlikewin .step{padding-top:30px;}.openlikewin .step .stepicon{width:60px;height:64px;margin:0 auto;}.openlikewin .step .stepcnt{width:500px;height:32px;line-height:32px;padding-top:16px;color:#333;font-size:20px;}.openlikewin .stepone{}.openlikewin .stepone .stepicon{background-position:-6px -247px;}.openlikewin .stepone .stepcnt{}.openlikewin .steptwo{}.openlikewin .steptwo .stepicon{background-position:-6px -359px;}.openlikewin .steptwo .stepcnt{}.openlikewin .stepthree{margin-bottom:40px;}.openlikewin .stepthree .stepicon{background-position:-6px -470px;}.openlikewin .stepthree .stepcnt{margin-bottom:5px;}.openlikewin .likeaddr{width:304px;height:40px;line-height:40px;padding:6px;margin:0 auto;background-position:-1px -600px;}.openlikewin .likeaddr .blogname{font-family:"Hiragino Sans GB W3","Hiragino Sans GB",Arial,Helvetica,simsun,u5b8bu4f53;}.openlikewin .likeaddr .blogname{text-align:right;float:left;width:150px;height:40px;line-height:40px;padding:0;margin:0;color:#666;font-size:20px;border:none;outline:none;background:none;}.openlikewin .likeaddr .urlsuffix{text-align:left;float:left;width:120px;height:40px;line-height:40px;color:#666;font-size:20px;}.openlikewin .openmylike{width:316px;height:54px;margin:0 auto;background-position:1px 1px;cursor:pointer;}.outlinklayer{position:absolute;width:398px;background:#fff;border:1px solid #cdcdcd;text-align:left;}.outlinklayer .hdarea{height:25px;}.outlinklayer .hdarea .close{position:absolute;right:0;top:0;width:30px;height:30px;background:url(/newpage/images/outlink/close.png) 10px 8px no-repeat;cursor:pointer;}.outlinklayer .bdarea{height:108px;padding:0 0 25px 30px;}.outlinklayer .bdarea .ttl{height:26px;line-height:26px;color:#333;font-size:16px;font-weight:bold;}.outlinklayer .bdarea .url{width:340px;height:22px;line-height:22px;color:#666;font-size:14px;font-weight:bold;}.outlinklayer .bdarea .prompt{height:22px;line-height:22px;padding-top:12px;color:#999;font-size:14px;}.outlinklayer .bdarea .goon{height:26px;line-height:26px;color:#536c86;font-size:16px;text-decoration:underline;}.outlinklayer .adarea{padding:10px;border-top:1px solid #e6e6e6;}.outlinklayer .adarea .adlink{}.outlinklayer .adarea .adpic{display:block;width:378px;height:50px;border:none;}.blogPublicAccount{width:95px;height:340px;padding:25px 10px 25px 25px;background:#fff;}.blogPublicAccount h3{height:26px;line-height:26px;padding:1px 0 0 0;margin:0;font-weight:normal;font-size:18px;color:#444;background:url(/newpage/images/publicaccount/sinav.png) 72px 8px no-repeat;}.blogPublicAccount h3{_background-position:72px 6px;}.blogPublicAccount .wbttl, .blogPublicAccount .yxttl, .blogPublicAccount .wxttl{height:18px;line-height:18px;padding:0;margin:0;font-weight:normal;font-size:12px;color:#444;}.blogPublicAccount .wbttl{margin-bottom:7px;color:#999;}.blogPublicAccount .yxttl{margin-bottom:4px;}.blogPublicAccount .wxttl{margin-bottom:4px;}.blogPublicAccount .wbiframe{height:24px;margin-bottom:27px;}.blogPublicAccount .yx2d{width:80px;height:80px;margin-bottom:27px;background:url(/newpage/images/publicaccount/yx2d.png) 0 0 no-repeat;}.blogPublicAccount .wx2d{width:80px;height:80px;background:url(/newpage/images/publicaccount/wx2d.jpg) 0 0 no-repeat;}.f-trans{transition:all 0.3s linear;-webkit-transition:all 0.3s linear;-moz-transition:all 0.3s linear;-o-transition:all 0.3s linear;}.nbw-ryt .right{width:260px;}.nbw-ryt .left{margin-right:-262px;}.nbw-ryt .left .lcnt{margin-right:260px;}.js-auto-098 .left, .js-fix-098 .left{margin:0 auto;}.js-auto-098 .left .lcnt, .js-fix-098 .left .lcnt{margin-right:0;}.m-3 .m-aboutme .nick .mingxing{background-position:-43px -76px;}.m-3 .m-aboutme .nick .xinxing{background-position:-81px -76px;}.m-3 .m-aboutme .flw{position:relative;z-index:10;margin:0 15px;}.m-3 .f-bkicons, .m-3 .rightoperatebar-new .f-myLikeIcons{background:url(/newpage/images/redesign2014/bkicons24.png) -9999px -9999px no-repeat;_background:url(/newpage/images/redesign2014/bkicons8.png) -9999px -9999px no-repeat;}.m-3 .share-wrap .shareitm{float:left;width:24px;height:24px;padding:0 0 0 6px;cursor:pointer;}.m-3 .share-wrap .lofter{background-position:0 -144px;}.m-3 .share-wrap .sinawb{background-position:0 -192px;}.m-3 .share-wrap .qqzone{background-position:0 -240px;}.m-3 .share-wrap .qqweibo{background-position:0 -288px;}.m-3 .share-wrap .weixin{background-position:0 -336px;}.m-3 .share-wrap .yixin{background-position:0 -384px;}.m-3 .share-wrap .weixin, .m-3 .share-wrap .yixin{position:relative;zoom:1;}.m-3 .share-wrap .code2dimlayer{visibility:hidden;position:absolute;left:-22px;bottom:28px;width:242px;height:113px;text-align:left;cursor:default;}.m-3 .share-wrap .code2dimlayer{background:url(/newpage/images/redesign2014/code2dbg24.png) 0 0 no-repeat;_background:url(/newpage/images/redesign2014/code2dbg8.png) 0 0 no-repeat;}.m-3 .share-wrap .code2dimlayer img{float:left;width:84px;height:84px;margin:11px -108px 0 11px;}.m-3 .share-wrap .code2dimlayer .tips{margin:30px 0 0 108px;color:#777;font-size:12px;}.m-3 .share-wrap .code2dimlayer .tips p{padding:0;margin:0;line-height:24px;}.m-3 .share-wrap .js-show2dimlayer{}.m-3 .share-wrap .js-show2dimlayer .code2dimlayer{visibility:visible;}.m-3 .rightoperatebar-new{height:25px;line-height:25px;padding-top:6px;}.m-3 .rightoperatebar-new .likebtn, .m-3 .rightoperatebar-new .reblogbtn, .m-3 .rightoperatebar-new .recommendbtn{width:34px;height:25px;line-height:25px;padding-left:29px;margin-left:6px;color:#fff;font-size:12px;}.m-3 .rightoperatebar-new .likebtn{background-position:0 -96px;}.m-3 .rightoperatebar-new .reblogbtn{background-position:0 0;}.m-3 .rightoperatebar-new .recommendbtn{background-position:0 -48px;}.m-3 .rightoperatebar-new .js-liked{background-position:-137px -96px;}.m-3 .rightoperatebar-new .js-recommended{background-position:-137px -48px;}.m-3 .editopbar{margin-bottom:10px;}.m-3 .author img.cwd, .m-3 .hotarea .expeadbg, .m-3 .comment .nbw-f40 img.cwd{border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;-o-border-radius:20px;}.m-3 .comment .nbw-f50 img.cwd, .m-3 .comment .publish .nbw-fce img.cwd{border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px;-o-border-radius:25px;}.m-3 .comment .nbw-f40 img.cwd, .m-3 .comment .nbw-f50 img.cwd{transition:all 0.35s linear;-webkit-transition:all 0.35s linear;-moz-transition:all 0.35s linear;-o-transition:all 0.35s linear;}.m-3 .comment img.js-rotate, .m-3 .comment .nbw-f40 a:hover img.cwd, .m-3 .comment .nbw-f50 a:hover img.cwd{transform:rotate(360deg);-ms-transform:rotate(360deg);-moz-transform:rotate(360deg);-webkit-transform:rotate(360deg);-o-transform:rotate(360deg);}.m-3 .nbw-blog img{height:auto;}.newtmpl_common .m-3 .nbw-ryt .left .nbw-bitm .bct embed{max-height:336px;}.newtmpl_common .wsy{min-width:990px;}.newtmpl_common .nb-cnt{background:none;}.newtmpl_common .nb-cnt .wc{margin:0;}.newtmpl_common .m-3{width:990px;padding-top:10px;margin:0 auto;border:none;}.newtmpl_common .m-3 .nbw-ryt .left .top{height:20px;}.newtmpl_common .m-3 .nb-mc .cc{padding:0;margin:0;background:none;}.newtmpl_common .m-3 .nb-mt{display:none;}.newtmpl_common .nb-mdl .l, .newtmpl_common .nb-mdl .r{display:none;}.newtmpl_common .nb-mdl .bh{display:none;}.newtmpl_common .nbw-ryt .right{border:none;}.newtmpl_common .m-3 .nbw-ryt .left{width:688px;padding-right:31px;margin-right:0;}.newtmpl_common .m-3 .nbw-ryt .left .lcnt{padding:26px 30px;margin-right:0;border:none;}.newtmpl_common .m-3 .nbw-ryt .left .lcnt{-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;}.newtmpl_common .m-3 .left{position:relative;zoom:1;overflow:visible;}.newtmpl_common .m-3 .left .uperbox, .newtmpl_common .m-3 .left .downbox{position:absolute;right:-3px;width:5px;height:5px;overflow:hidden;}.newtmpl_common .m-3 .left .uperbox{top:0px;}.newtmpl_common .m-3 .left .downbox{bottom:0px;}.newtmpl_13664000 .m-3 .nbw-ryt .left{border-right:1px solid #c1c1c1;}.newtmpl_13664000 .m-3 .nbw-ryt .left .lcnt{background:#fff;border:1px solid #d6cdc1;}.newtmpl_13664000 .m-3 .left .uperbox, .newtmpl_13664000 .m-3 .left .downbox{background:#c1c1c1;}.newtmpl_13664000 .m-aboutme .ttlbar, .newtmpl_13664000 .m-blogclasses .ttlbar, .newtmpl_13664000 .m-lofteriframe .ttlbar, .newtmpl_13664000 .m-163news .ttlbar{color:#333;border-bottom:4px solid #333;}.newtmpl_13664000 .m-aboutme .nick a{color:#666;}.newtmpl_13664000 .m-aboutme .desc{border-color:#666;}.newtmpl_13664000 .m-aboutme .desc p{color:#666;}.newtmpl_13664000 .m-blogclasses li a, .newtmpl_13664000 .m-163news .newscnt li a{color:#666;}.newtmpl_13664000 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13664000 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13664000 .m-163news .newscnt .download163news .fc03{color:#c14f4f;}.newtmpl_13664000 .m-163news .newscnt li .fc05:hover{color:#c14f4f;}.newtmpl_13664001 .m-3 .nbw-ryt .left{border-right:1px solid #9ababa;}.newtmpl_13664001 .m-3 .nbw-ryt .left .lcnt{background:#fff;border:1px solid #d6cdc1;}.newtmpl_13664001 .m-3 .left .uperbox, .newtmpl_13664001 .m-3 .left .downbox{background:#9ababa;}.newtmpl_13664001 .m-aboutme .ttlbar, .newtmpl_13664001 .m-blogclasses .ttlbar, .newtmpl_13664001 .m-lofteriframe .ttlbar, .newtmpl_13664001 .m-163news .ttlbar{color:#303a3a;border-bottom:4px solid #303a3a;}.newtmpl_13664001 .m-aboutme .nick a{color:#455353;}.newtmpl_13664001 .m-aboutme .desc{border-color:#455353;}.newtmpl_13664001 .m-aboutme .desc p{color:#455353;}.newtmpl_13664001 .m-blogclasses li a, .newtmpl_13664001 .m-163news .newscnt li a{color:#455353;}.newtmpl_13664001 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13664001 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13664001 .m-163news .newscnt .download163news .fc03{color:#c14f4f;}.newtmpl_13664001 .m-163news .newscnt li .fc05:hover{color:#c14f4f;}.newtmpl_13664002 .m-3 .nbw-ryt .left{border-right:1px solid #666;}.newtmpl_13664002 .m-3 .nbw-ryt .left .lcnt{background:#eee;border:1px solid #eee;}.newtmpl_13664002 .m-3 .left .uperbox, .newtmpl_13664002 .m-3 .left .downbox{background:#666;}.newtmpl_13664002 .m-aboutme .ttlbar, .newtmpl_13664002 .m-blogclasses .ttlbar, .newtmpl_13664002 .m-lofteriframe .ttlbar, .newtmpl_13664002 .m-163news .ttlbar{color:#999;border-bottom:4px solid #666;}.newtmpl_13664002 .m-aboutme .nick a{color:#999;}.newtmpl_13664002 .m-aboutme .desc{border-color:#666;}.newtmpl_13664002 .m-aboutme .desc p{color:#999;}.newtmpl_13664002 .m-blogclasses li a, .newtmpl_13664002 .m-163news .newscnt li a{color:#999;}.newtmpl_13664002 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13664002 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13664002 .m-163news .newscnt .download163news .fc03{color:#c38c81;}.newtmpl_13664002 .m-163news .newscnt li .fc05:hover{color:#c38c81;}.newtmpl_13665001 .m-3 .nbw-ryt .left{border-right:1px solid #b8b3a8;}.newtmpl_13665001 .m-3 .nbw-ryt .left .lcnt{background:#f9f7f1;border:1px solid #d6cdc1;}.newtmpl_13665001 .m-3 .left .uperbox, .newtmpl_13665001 .m-3 .left .downbox{background:#b8b3a8;}.newtmpl_13665001 .m-aboutme .ttlbar, .newtmpl_13665001 .m-blogclasses .ttlbar, .newtmpl_13665001 .m-lofteriframe .ttlbar, .newtmpl_13665001 .m-163news .ttlbar{color:#443e39;border-bottom:4px solid #443e3a;}.newtmpl_13665001 .m-aboutme .nick a{color:#443e3a;}.newtmpl_13665001 .m-aboutme .desc{border-color:#666159;}.newtmpl_13665001 .m-aboutme .desc p{color:#443e3a;}.newtmpl_13665001 .m-blogclasses li a, .newtmpl_13665001 .m-163news .newscnt li a{color:#443e3a;}.newtmpl_13665001 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13665001 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13665001 .m-163news .newscnt .download163news .fc03{color:#cc6666;}.newtmpl_13665001 .m-163news .newscnt li .fc05:hover{color:#cc6666;}.newtmpl_13664003 .m-3 .nbw-ryt .left{border-right:1px solid #9e939c;}.newtmpl_13664003 .m-3 .nbw-ryt .left .lcnt{background:#fbf9fd;border:1px solid #d6cdc1;}.newtmpl_13664003 .m-3 .left .uperbox, .newtmpl_13664003 .m-3 .left .downbox{background:#9e939c;}.newtmpl_13664003 .m-aboutme .ttlbar, .newtmpl_13664003 .m-blogclasses .ttlbar, .newtmpl_13664003 .m-lofteriframe .ttlbar, .newtmpl_13664003 .m-163news .ttlbar{color:#301d28;border-bottom:4px solid #301d28;}.newtmpl_13664003 .m-aboutme .nick a{color:#61535c;}.newtmpl_13664003 .m-aboutme .desc{border-color:#61535c;}.newtmpl_13664003 .m-aboutme .desc p{color:#61535c;}.newtmpl_13664003 .m-blogclasses li a, .newtmpl_13664003 .m-163news .newscnt li a{color:#61535c;}.newtmpl_13664003 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13664003 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13664003 .m-163news .newscnt .download163news .fc03{color:#93466e;}.newtmpl_13664003 .m-163news .newscnt li .fc05:hover{color:#93466e;}#blog-163-com-main{z-index:2;}.m-fixedPCAd{_display:none;visibility:hidden;opacity:0;}.m-fixedPCAd .fixedbar{position:fixed;right:0;bottom:0;z-index:99;width:300px;height:49px;}.m-fixedPCAd .fixedbar a{background:url(/newpage/images/loftlayer/bottom2.png) 0 0 no-repeat;border:1px solid #316062;}.m-fixedPCAd .fixedbar em{background:url(/newpage/images/loftlayer/arrows24.png) 0 2px no-repeat;}.m-fixedPCAd .fixedbar a{position:fixed;right:0;bottom:0;z-index:99;width:298px;height:48px;text-decoration:none;}.m-fixedPCAd .fixedbar em{position:absolute;right:22px;bottom:20px;z-index:100;width:12px;height:10px;}.m-fixedPCAd .hoverbar{visibility:hidden;border-style:solid;border-width:1px 1px 0 1px;border-color:#316062;}.m-fixedPCAd .hoverbar{position:fixed;right:0;bottom:-193px;z-index:98;width:298px;height:200px;background-position:0 0;}.m-fixedPCAd .hoverbar .part1{height:34px;line-height:34px;padding:8px 10px 2px 10px;text-align:left;}.m-fixedPCAd .hoverbar .part1 a{float:right;color:#3a7a7b;font-size:14px;text-decoration:none;}.m-fixedPCAd .hoverbar .part1 span{color:#000;font-size:14px;}.m-fixedPCAd .part2{padding-left:10px;}.m-fixedPCAd .part2 .jximgwrap{float:left;width:134px;height:134px;margin-right:10px;}.m-fixedPCAd .part2 .jximgwrap img{display:block;width:100%;height:100%;}.js-fixedPCAd-hover .hoverbar{visibility:visible;bottom:49px;}.js-fixedPCAd-hover .fixedbar em{background-position:0 -69px;}.m-3 .nbw-bitm .cited{margin-top:20px;}.m-shareAndDownLoad{height:24px;line-height:24px;margin-top:-8px;}.m-lmiddlead{position:relative;width:100%;overflow:hidden;}.m-lmiddlead img, .m-lmiddlead embed, .m-lmiddlead object{display:block;width:100%;border:none;cursor:pointer;}.m-lmiddlead .adlink{display:block;position:relative;z-index:10;_width:590px;max-width:590px;background:url(http://b.bst.126.net/common/empty.png) 0 0 repeat;}.m-lmiddlead .flashadwrap{}.m-lmiddlead-flash .adlink img{display:none;}.m-lmiddlead-flash .flashadwrap{display:block;position:absolute;left:0;top:0;z-index:5;}.voteValCodeArea{}.m-valcode{height:24px;line-height:24px;padding:8px 0;margin-bottom:20px;}.m-valcode .txtcode{float:left;width:50px;height:24px;padding:0 5px;margin-right:10px;border-width:1px;border-style:solid;border-color:#c2c2c2 #d7d7d7 #d7d7d7 #c2c2c2;}.m-valcode .codeimg{float:left;width:60px;height:24px;margin-right:10px;}.m-valcode .changeimg{float:left;cursor:pointer;text-decoration:underline;} </style>
+  
+  <link href="/newpage/prettycode/prettify.css" type="text/css" rel="stylesheet" />
+  </head>
+<body onload="prettyPrint()" id="blog-163-com" class="nb-body nb-inr nb-edt newtmpl_common newtmpl_13665001">
+  <!--[if lte IE 6]><div id="blog-163-com-ie6bodywrap" class=""><![endif]-->
+    <!--[if lte IE 6]><div id="blog-163-com-ie6body" class="nb-body"><![endif]-->
+
+<div class="nb-nbar clearfix" id="blog-163-com-topbar">
+  <div class="pl fl clearfix">
+  <div id="" class="nbw-im fl im im0">
+    <a  rel="nofollow"  class="lbl bd ia noul " href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://www.163.com/" target="_blank" hidefocus="true"><span class="tx">网易</span><span class="iblock icn0 icn0-421">&nbsp;</span></a><div class="nbw-tcd box-shadow bd">
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://news.163.com/" >
+            新闻
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://www.lofter.com/&amp;act=qbbkdl_20141211_01" >
+            LOFTER
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://email.163.com/" >
+            邮箱
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://photo.163.com/" >
+            相册
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://yuedu.163.com/" >
+            阅读
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://yuedu.163.com/book" >
+            图书
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://www.youdao.com/" >
+            有道
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://photo.163.com/pp/square/" >
+            摄影
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://qiye.163.com/" >
+            企业邮箱
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://quan.163.com/?from=blogdh" >
+            优惠券
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://note.youdao.com/?vendor=163blog" >
+            云笔记
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://fm.163.com/?fmblogzx0628" >
+            闪电邮
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://mail.163.com/client/dl.html?from=mail27" >
+            邮箱大师
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://yxp.163.com/" >
+            印像派
+          </a>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://www.kaola.com/" >
+            考拉海购
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <a  rel="nofollow"   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://sitemap.163.com/" >
+            更多
+          </a>
+        
+    </div>
+  </div>
+
+    <span style="display:none;margin-left:0;" class="fl iblock space icn1 icn1-4">&nbsp;</span>
+
+  <div id="" class="nbw-im fl im im10">
+    <a  class="lbl bd ia noul " href="http://blog.163.com/?frompersonalbloghome" target="_blank" hidefocus="true"><span class="tx">博客</span><span class="iblock icn0 icn0-421">&nbsp;</span></a><div class="nbw-tcd box-shadow bd">
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/services/wapblog.html?frompersonalbloghome" >
+            手机博客
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/clone/clone.html?frompersonalbloghome" >
+            博客搬家
+          </a>
+          <a   target="_blank"  class="itm noul youcai " hidefocus="true" href="http://blog.163.com/vip.do?frompersonalbloghome" >
+            博客VIP服务
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/public/explore/?frompersonalbloghome" >
+            发现
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/g/?frompersonalbloghome" >
+            小组
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/public/theme/?frompersonalbloghome" >
+            风格
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/blog_admin/blog/static/721279201082863728829/?frompersonalbloghome" >
+            LiveWriter写博
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/blog_admin/blog/static/721279201092713253500/?frompersonalbloghome" >
+            word写博
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/services/mailblog.html?frompersonalbloghome" >
+            邮件写博
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/services/emsblog.html?frompersonalbloghome" >
+            短信写博
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/showMultiUser.do?frompersonalbloghome" >
+            群博客
+          </a>
+          <a   target="_blank"  class="itm noul youcai " hidefocus="true" href="http://blog.163.com/BLOG_YOUCAI/" >
+            博客油菜地
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/ht/?frompersonalbloghome" >
+            博客话题
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/hot/history/?frompersonalbloghome" >
+            博客热点
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://q.163.com/#home?frompersonalbloghome" >
+            博客圈子
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/findFriend.do?type=5?frompersonalbloghome" >
+            找朋友
+          </a>
+        
+    </div>
+  </div>
+                               
+    <span style="display:none;margin-left:0;" class="fl iblock space icn1 icn1-4">&nbsp;</span>
+    
+    <div id="topbar_gachaArea" class="fl topbar_gachaArea">
+        <a class="dlditm" rel="nofollow" target="_blank" hidefocus="true" href="http://gacha.163.com/discover/pic?tag=1&amp;utm_source=%E7%BD%91%E6%98%93%E5%8D%9A%E5%AE%A2%E5%B7%A6%E4%B8%8A%E8%A7%92%E6%96%87%E5%AD%97%E9%93%BE&amp;utm_campaign=%E7%BD%91%E6%98%93%E5%8D%9A%E5%AE%A2%E5%B7%A6%E4%B8%8A%E8%A7%92%E6%96%87%E5%AD%97%E9%93%BE">GACHA－紧身衣美少女诱惑<em></em></a>
+        <div class="m-gachaWrap">
+            <div class="clearfix part1">
+                <a class="jximgwrap" target="_blank" href="http://gacha.163.com/detail/post/fb73af031e5d4ec0a6cf844a0cd5547d"><img class="jximg" src="http://gacha.nosdn.127.net/a434bc93c3d54d8bbe782a2a1bf346ab.jpeg?imageView&amp;thumbnail=268y268&amp;type=jpg&amp;enlarge=1&amp;quality=100&amp;axis=0" /></a>
+                <a class="jximgwrap" target="_blank" href="http://gacha.163.com/detail/post/44ecb48341a744acae01877823a19937"><img class="jximg" src="http://gacha.nosdn.127.net/d77d1cc151e24960bb512e1020de27f9.jpeg?imageView&amp;thumbnail=268y268&amp;type=jpg&amp;enlarge=1&amp;quality=100&amp;axis=0" /></a>
+                
+            </div>
+            <div class="part2">
+                <a class="moreimg" target="_blank" href="http://gacha.163.com/discover">更多美图&gt;</a>
+            </div>
+            <div class="part3">
+                <img src="http://b.bst.126.net/newpage/images/gacha/erweima.png">
+                <p>扫码下载</p>
+            </div>
+            <div class="part4">&nbsp;</div>
+        </div>
+        
+    </div>
+    
+    
+    <div id="topbar_lofterDldArea" class="fl topbar_lofterDldArea">
+        <a class="dlditm" onclick="statistic4Lofter('qbbkxz_20160330_04')" rel="nofollow" target="_blank" hidefocus="true" href="http://www.lofter.com/tag/少女?act=qbbkdl_20160513_01">LOFTER-高清美女私房一网打尽<em></em></a>
+        <div class="m-lofterWrap">
+            <div class="clearfix part1">
+                <a class="jximgwrap" target="_blank"><img class="jximg" /></a>
+                <a class="jximgwrap" target="_blank"><img class="jximg" /></a>
+            </div>
+            <div class="part2">
+                <a class="moreimg" target="_blank" href="http://www.lofter.com/view?from=blog">更多美图&gt;</a>
+            </div>
+            <div class="part3">
+                <img src="http://b.bst.126.net/newpage/images/loftlayer/code2d.png">
+                <p>扫码下载</p>
+            </div>
+            <div class="part4">&nbsp;</div>
+        </div>
+    </div>
+    
+    <div id="topbar_yxpArea" class="fl topbar_yxpArea">
+        <a class="dlditm" rel="nofollow" target="_blank" hidefocus="true" href="http://yxp.163.com/store/goods/photobook/">印像派-定制照片书<em></em></a>
+    </div>
+
+
+    <div class="nbw-im fl im1 im seebyway"><a rel="nofollow" title="随便看看" class="lbl bd ima spy" href="http://blog.163.com/randomUser.do"><span>&nbsp;</span></a></div>
+
+    <span style="display:none;" class="fl iblock space icn1 icn1-4">&nbsp;</span>
+    <div id="topbar_randShowArea" class="fl" style="display:none;">
+      <div class="nbw-im fl im1 im randtag phide"><a target="_blank" class="bd ima moveblog randshow" href="http://www.lofter.com/view?act=qbbkdlcsz_20160921_01&utm_source=163blog&utm_campaign=topbar-orange">颜值最高的图片社交社区</a></div>
+    </div>
+  </div>
+  <div class="fr pr clearfix">
+
+  <div id="" class="nbw-im fr im loginUserMenuArea">
+    <a  class="lbl bd ia noul  loginUserMenu" href="http://blog.163.com/zwssd1980/" target="_blank" hidefocus="true"><span class="tx"><img id="loginUserIcon" class="loginUserIcon" src="http://os.blog.163.com/common/ava.s?host=zwssd1980&b=0&r=-1"></span><span class="iblock icn0 icn0-421">&nbsp;</span></a><div class="nbw-tcd box-shadow bd">
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://zwssd1980.blog.163.com/blogBackendManage.do" >
+            <span class="iblock mgblog">&nbsp;</span>日志管理
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://zwssd1980.blog.163.com/dress/" >
+            <span class="iblock dsblog">&nbsp;</span>博客装扮
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://zwssd1980.blog.163.com/settings/" >
+            <span class="iblock stblog">&nbsp;</span>博客设置
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <span class="itm noul nolink " hidefocus="true">
+            zwssd1980@163.com
+          </span>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://blog.163.com/mailLogin.do?username=zwssd1980@163.com" >
+            网易邮箱(<span id="topbar_newEmailCount" class="newEmailCount">0</span>)
+          </a>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://www.lofter.com/entry?from=blogcount&amp;logined=true" >
+            LOFTER(<span id="topbar_newLofterCount" class="newLofterCount ">0</span>)
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <a   target="_blank"  class="itm noul  " hidefocus="true" href="http://fankui.163.com/ft/comment.fb?pid=5002" >
+            意见反馈
+          </a>
+          <a  target="_self"  class="itm noul  " hidefocus="true" href="/exit.do?target=http://zwssd1980.blog.163.com/blog/" onclick="this.href='/exit.do?target='+location.href">
+            退出登录
+          </a>
+        
+    </div>
+  </div>
+
+      <span id="topbar_emailBoxArea" class=" fr fw1 ud ima imx">(
+      <a class="noul" target="_blank" href="http://blog.163.com/mailLogin.do?username=zwssd1980@163.com"><span class="iblock icn0 icn0-123 cs">&nbsp;</span><span class="emailcount ztag">0</span></a>
+      <a class="noul" target="_blank" href="http://t.163.com/?f=blogmsg"><span class="iblock imbcount cs">&nbsp;</span><span class="emailcount ztag">0</span></a>
+      )</span>
+        <div id="topbar_acountArea" class="fr account">
+          <div class="accountwrap ztag">
+            <div class="accountname fw1"><span class="iblock ztag"></span><span class="iblock lstbtn">&nbsp;</span></div>
+            <div style="width:100px" class="guidelist nbw-tcd bd ztag">
+                <a target="_blank" class="itm noul" href="http://reg.163.com/Main.jsp?username=zwssd1980@163.com">进入通行证</a>
+                <a target="_blank" class="itm noul" href="http://blog.163.com/mailLogin.do?username=zwssd1980@163.com">进入我的邮箱</a>
+                <a target="_blank" class="itm noul" href="http://blog.163.com/zwssd1980/">进入我的博客</a>
+                <a target="_blank" class="itm noul" href="http://photo.163.com/?username=zwssd1980@163.com">进入我的相册</a>
+                <a target="_blank" class="itm noul" href="http://reader.youdao.com/?keyfrom=163home">进入有道阅读</a>
+                <a target="_blank" class="itm noul" href="http://t.163.com">进入我的微博</a>
+            </div>
+          </div>
+        </div>
+        <div id="topbar_welcomeArea" class="fr welcome"><span class="greet ztag"></span><a class="nickname m2a ztag" target="_blank" href="#"></a></div>
+      <div id="topbar_messageBoxArea" class="nbw-im fr im9 msgbox js-nomsg-090">
+        <a class="lbl bd ia" href="http://zwssd1980.blog.163.com/message/" hidefocus="true"><span class="tx ztag">消息</span>(<span class="msgcount fw1 ztag">0</span>)<span class="iblock icn0 icn0-421">&nbsp;</span></a>
+        <div class="nbw-tcd box-shadow bd msg">
+          <a class="itm noul" href="http://zwssd1980.blog.163.com/message/">短消息：<span class="mztag">0</span></a><a class="itm noul" href="http://zwssd1980.blog.163.com/message/?type=com">评论：<span class="mztag">0</span></a><a class="itm noul" href="http://zwssd1980.blog.163.com/message/?type=comReply">评论回复：<span class="mztag">0</span></a><a class="itm noul" href="http://zwssd1980.blog.163.com/message/?type=note">留言：<span class="mztag">0</span></a><a class="itm noul" href="http://zwssd1980.blog.163.com/message/?type=alert">通知：<span class="mztag">0</span></a>
+        </div>
+      </div>
+      <div id="topbar_myLikesArea" class="nbw-im fr topbar_myLikesArea"  style="display:none"  >
+	    <div id="likeanimate" class="f-myLikeIcons likeanimate"></div>
+	    <a id="mylikelink" class="lbl bd ima myLikes fl" href="http://www.lofter.com/mentionredirect.do?blogId=&fromBlogToolbar" target="_blank"><span class="fl newpcticon">&nbsp;<em></em></span><span class="fl">我的喜欢</span></a>
+	  </div>
+      <div id="topbar_newPersonalCenterArea" class="nbw-im fr">
+        <a href="http://zwssd1980.blog.163.com/manage/?fromBlogToolbar" class="lbl bd ima newPersonalCenter fl ztag"><span class="fl newpcticon">&nbsp;<em></em></span><span class="fl">个人中心</span></a>
+      </div>
+
+      <div id="topbar_goWriteBlogArea" class="nbw-im fr">
+        <a target="_blank" href="http://zwssd1980.blog.163.com/getBlog.do?fromString=topbar" class="lbl bd ima gowriteblog fl ztag"><span class="fl writeicon">&nbsp;</span><span class="fl">写日志</span></a>
+      </div>
+
+
+  </div>
+</div>
+<script type="text/javascript">
+  (function(){
+      var e = document.getElementById('blog-163-com-main');
+      if(!!e) e.parentNode.insertBefore(document.getElementById('blog-163-com-topbar'),e);
+      e = document.getElementById('blog-notice-email');
+      if(!!e) window.setTimeout(function(){e.style.display='';},50);
+  })()
+</script>
+
+
+<script src="http://shared.ydstatic.com/js/yadk/1.1.1.js"></script>
+
+<!-- @NOPARSE -->
+<script src="http://webzj.reg.163.com/webapp/javascript/page/json3.js"></script>
+<script type="text/javascript" src="http://webzj.reg.163.com/webapp/javascript/message.js"></script>
+<!-- /@NOPARSE -->
+
+<div id="blogtoptips-yitou" class="blogtoptips blogtoptips-yitou phide">
+</div>
+
+<div class="blogtoptips phide" id="blog-163-com-toptips">
+ <div class="blogtoptipswrap">
+  <div id="newbulletinstip" class="newbulletinstip phide">
+    <a class="lnknews fc03 m2a tiptag phide" href="" target="_blank"></a><span class="txtnews tiptag phide"></span>&nbsp;&nbsp;&nbsp;<a class="fc03 ul nextorprevnews tiptag phide" href="" hidefocus="true">显示下一条</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a class="fc03 ul close tiptag" href="" hidefocus="true">关闭</a>
+  </div>
+ </div>
+ 	<div id="sinaoauthtip" class="sinaoauthtip phide">
+    	<span style="">温馨提示！由于新浪微博认证机制调整，您的新浪微博帐号绑定已过期，请重新绑定！</span><a rel="nofollow" class="fc03 noul iblock" href="http://zwssd1980.blog.163.com/settings/?fromnewcenter#m=6">立即重新绑定新浪微博》</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a class="fc03 iblock close" href="">关闭</a>
+  	</div>
+    <div id="$_faxiantip" class="faxiantip phide">
+      <div>
+	    <a class="m2a iblock" href="http://blog.163.com/public/explore/?fromblogbanner" target="_blank"></a>
+	    <span class="faxiantag m2a"></span>
+      </div>
+    </div>
+    <div id="$_guanggaotip" class="guanggaotip phide">
+      <div>
+	    <a class="m2a iblock" href="http://zwssd1980.blog.163.com/settings/#m=7&fromblogbanner" target="_blank"></a>
+	    <span class="guanggaotag m2a"></span>
+      </div>
+    </div>
+    <div id="$_lofterInviteTip" class="lofterInviteTip phide">
+      <div>
+	    <a class="m2a iblock" href="http://www.lofter.com/invite/163blog/?email=zwssd1980@163.com" target="_blank"></a>
+	    <span class="lofterInviteTag m2a"></span>
+      </div>
+    </div>
+</div>  <div class="nb-wrap wsy" id="blog-163-com-main"><div class="nb-are nb-top">
+  <div class="wkg h" id="blog-163-com-banner">
+    
+    <div class="t">
+      <h1 class="n c"><span class="ztag pre">伟的博客</span><span class="c space"><span class="e fc03 pnt">[编辑]</span></span></h1>
+      <p class="d c"><span class="ztag pre">生活、技术、点点滴滴(其实我挺聪明的，就是人有点傻)</span><span class="c space"><span class="e fc03 pnt">[编辑]</span></span></p>
+    </div>
+    <div class="f h ztag"></div>
+    <a class="x" hidefocus="true" target="_blank" href="#"><span class="xx ztag"></span></a>
+  </div>
+</div><div class="nb-are nb-nav">
+  <div class="wkg">
+    <div class="c h">
+      <h2>导航</h2>
+      <ul class="noul clearfix">
+                
+	        <li class="w w0">
+	          <a class="i i0 fc01 h" hidefocus="true" href="http://zwssd1980.blog.163.com/">首页</a>
+	        </li>
+	        <li class="w w1 selected">
+	          <a class="i i1 fc01 h" hidefocus="true" href="http://zwssd1980.blog.163.com/blog/">日志</a>
+	        </li>
+	        <li class="w w9">
+	          <a class="i i9 fc01 h" hidefocus="true" href="http://zwssd1980.blog.163.com/loftarchive/">LOFTER</a>
+	        </li>
+	        <li class="w w2">
+	          <a class="i i2 fc01 h" hidefocus="true" href="http://zwssd1980.blog.163.com/album/">相册</a>
+	        </li>
+	        <li class="w w3">
+	          <a class="i i3 fc01 h" hidefocus="true" href="http://zwssd1980.blog.163.com/music/">音乐</a>
+	        </li>
+	        <li class="w w4">
+	          <a class="i i4 fc01 h" hidefocus="true" href="http://zwssd1980.blog.163.com/collection/">收藏</a>
+	        </li>
+	        <li class="w w5">
+	          <a class="i i5 fc01 h" hidefocus="true" href="http://zwssd1980.blog.163.com/friends/">博友</a>
+	        </li>
+	        <li class="w w6">
+	          <a class="i i6 fc01 h" hidefocus="true" href="http://zwssd1980.blog.163.com/profile/">关于我</a>
+	        </li>
+      </ul><!--
+ --></div>
+    <div class="l h">&nbsp;</div>
+    <div class="r h">&nbsp;</div>
+  </div>
+</div>  <div class="nb-are nb-smt"><div class="wkg h space"><div class="l h">&nbsp;</div><div class="r h">&nbsp;</div><div class="c h">&nbsp;</div></div></div>
+  <div class="nb-are nb-cnt">
+    <div class="wkg">
+  <div class="nbw-ban" >
+    <div class="img icn1 icn1-5">&nbsp;</div>
+    <div class="cnt " id="blog-163-com-bantip">
+由于您的博客内含有违规内容，已违反互联网信息服务管理办法有关条例，目前帐号已被封禁。<br/>请尽快删除相关内容，处理完毕后，<a class="ul" target="_blank" href="http://blog.163.com/unblock.do?u=3029649">可在此点击申请解封</a>。    </div>
+  </div>
+  <script type="text/javascript">
+    function showTip(){document.getElementById('blog-163-com-bantip').parentNode.style.display = 'block';}
+    function showTipOutLink(){document.getElementById('blog-163-com-pban').style.display='none';document.getElementById('blog-163-com-poutban').style.display='block';document.getElementById('blog-163-com-bantip').parentNode.style.display = 'block';}
+    function refreshTip(){var e=document.getElementById('blog-163-com-bantip');e.className='js-single-100';e.innerHTML='您已成功提交解封申请，您的博客目前还处于封禁状态，我们会尽快为您处理，请耐心等待。';}
+  </script>
+      <div class="c wc h clearfix " id="blog-163-com-container">
+
+  <div class="nb-mdl lcr m-3 " id="-3">
+  <div class="nb-mt lcr th fc02">
+    <div class="c tc th lcr"><h2 class="thide nb-jsc mdl_t_t">日志</h2></div>
+    <div class="r tm th nb-jsc"></div>
+    <div class="l tl th">&nbsp;</div>
+    <div class="r tr th">&nbsp;</div>
+  </div>
+    <div class="nb-mc lcr">
+      <div class="c cc lcr nb-jsc">
+<script>
+function g_onSuggestedReadingImgLoad(_img){
+    var image = new Image();
+    image.src = _img.src;
+    var _width = 90;
+    var _height = 90;
+    if(image.width > image.height){
+    	_img.style.marginLeft = -Math.floor((image.width*(_height/image.height)-_width)/2)+'px';
+    	_img.style.height = _height+'px';
+    }else {
+    	_img.style.width = _width+'px';
+    	_img.style.marginTop = -Math.floor((image.height*(_width/image.width)-_height)/2)+'px';
+    }
+    _img.style.display = 'block';
+}
+</script>
+<div class="nbw-ryt ztag clearfix ">
+  <div class="right bdwl bds0 bdc0">
+    <div class="cnt ztag">
+    <div class="g-rsidebar">
+        <div class="m-aboutme">
+            <div class="ttlbar fc06 bdwb bdc0 bds0">关于我</div>
+            <a class="avatar" href="http://zwssd1980.blog.163.com/" target="_blank" hidefocus="true" >
+                <img id="rsavatarimg" src="http://os.blog.163.com/common/ava.s?b=1&host=zwssd1980">
+            </a>
+            <div class="nick fc03">
+                 <a href="http://zwssd1980.blog.163.com/" target="_blank" hidefocus="true" >davidjory</a>
+                 
+            </div>
+        </div>
+        
+        <div class="m-rtopad">
+            <a href="#" target="_blank" hidefocus="true"><img style="border:none;" id="righttopadimg" /></a>
+            <iframe marginwidth="0" marginheight="0" id="rtop_iframe" style="display:none;" width="240" height="240" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+        </div>
+        
+        <div class="m-blogclasses">
+            <div class="ttlbar fc06 bdwb bdc0 bds0">文章分类</div>
+            <ul>
+                    <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_084074080082083069084083083095087086083074082082095" target="_blank" hidefocus="true"><span class="iblock dot">·</span>kturtle（1）</a></li>
+                    <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_084064087094083065084083087095087086083074082082095" target="_blank" hidefocus="true"><span class="iblock dot">·</span>无谓的科学（1）</a></li>
+                    <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_084065092083085071084094080095087086083074082082095" target="_blank" hidefocus="true"><span class="iblock dot">·</span>旅游（1）</a></li>
+                    <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_084065087087088075085086086095087086083074082082095" target="_blank" hidefocus="true"><span class="iblock dot">·</span>flash（1）</a></li>
+                    <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_084065087087088075084095083095087086083074082082095" target="_blank" hidefocus="true"><span class="iblock dot">·</span>财经（3）</a></li>
+                    <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_084065087087088075084095082095087086083074082082095" target="_blank" hidefocus="true"><span class="iblock dot">·</span>ipod&amp;iphone（1）</a></li>
+                    <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_084065087087088075084081095095087086083074082082095" target="_blank" hidefocus="true"><span class="iblock dot">·</span>音乐（1）</a></li>
+                    <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_084065087086088066085081095095087086083074082082095" target="_blank" hidefocus="true"><span class="iblock dot">·</span>教育（2）</a></li>
+                        <li><a class="fc05" href="http://zwssd1980.blog.163.com/blog/#m=0" target="_blank" hidefocus="true"><span class="iblock dot">·</span>更多 &gt;</a></li>
+            </ul>
+        </div>
+        <div id="r_mlofteriframe" class="m-lofteriframe">
+            <div class="ttlbar fc06 bdwb bdc0 bds0"><a hidefocus="true" style="display:none;float:left;margin-left:12px;color:#ff0000;font-size:12px;text-decoration:none;" target="_blank" href="http://www.lofter.com/?act=qbbokejingxuan_20150109_03&newloginentry=1">注册免费冲印20张照片</a><span>LOFTER精选</span></div>
+            <iframe id="r_lofteriframe" width="240" height="745" frameborder="0" border="0" scrolling="no" marginheight="0" marginwidth="0" allowtransparency="true"></iframe>
+            
+            <div class="btlink" style="height:20px;line-height:20px;padding:10px 0 0 12px;"><a target="_blank" href="http://www.lofter.com/?act=qbbokejingxuan_20150109_03&newloginentry=1" hidefocus="true" class="fc03" style="font-size:14px;text-decoration:none;">注册免费冲印20张照片 &gt;</a></div>
+            
+        </div>
+        <div id="r_mkaolaadv" class="m-kaolaadv">
+            <div class="ttlbar fc06 bdwb bdc0 bds0">网易考拉推荐</div>
+            <iframe width="240" height="275" marginheight="0" marginwidth="0" frameborder="0" scrolling="no" border="0" allowtransparency="true" src="http://g.163.com/r?site=netease&affiliate=blog&cat=detail&type=kl_240x275&location=1"></iframe>
+            
+        </div>
+        
+        <div id="r_m163news" class="m-163news"></div>
+        
+        
+        <div class="m-rbottomad">
+            <a href="#" target="_blank" hidefocus="true"><img style="border:none;" id="rightbottomadimg" /></a>
+            <iframe marginwidth="0" marginheight="0" id="rbottom_iframe" style="display:none;" width="240" height="240" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+        </div>
+        
+        <div id="r_fixedNodesWrap" class="fixedNodesWrap"><div id="r_fixedNodesCnt" class="fixedNodesCnt f-trans"></div></div>
+    </div>
+    </div>
+  </div>
+  <div class="left">
+       <div class="uperbox">&nbsp;</div>
+       <div class="downbox">&nbsp;</div>
+     <div class="lcnt bdwr bds0 bdc0 ">
+      <div id="$_newOldBlogLinkTopDiv" class='top fc03 bdwb bdc0 bds2 clearfix'>
+     </div>
+     <div class="mcnt ztag">
+      <div class="nbw-bitm bdwb bds2 bdc0 ">
+        <div class="multicntwrap">
+	      <div class="multicnt">
+	      	<div>
+		      <h3 class="title pre fs1"><span class="tcnt">Linux上Sybase ASE11.9.2的安装、配置与使用</span>&nbsp;&nbsp;<span class="bgc0 fc07 fw0 fs0"></span></h3>
+		      <p class="tdep clearfix nbw-act fc06" style="line-height:20px;">
+		        <span class="pleft">
+		          
+		          <span class="blogsep">2008-04-10 11:19:10</span><span class="blogsep">|&nbsp;&nbsp;分类：</span>
+		          <a class="fc03 m2a" href="http://zwssd1980.blog.163.com/blog/#m=0&t=1&c=fks_087066087080081068082086084095087086083074082082095" title="数据库">数据库</a>
+		          <span class="blogsep phide" id="$_blogTagTitle">|&nbsp;&nbsp;标签：</span><span class="fc03 phide" id="$_blogTagInfo"></span>
+		        </span>
+		        <span class="pright fc07 ztag"><span class="zihao fc03" id="$_fontswitch">字号<span class="zihaoshow  phide" id="$_fontsTypes"><span class="zihaoc bdc0"><span class="stag"></span><span class="fc04 stag">大</span><span  class="fc04 stag" >中</span><span  class="fc04 stag">小</span></span></span></span></span>
+		      </p>
+		    </div>
+	      </div>
+	      
+	      <div class="m-shareAndDownLoad">
+              <div class="share-wrap pleft">
+                <span id="$_shareBtn_lofter2" title="分享到LOFTER" class="shareitm lofter f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_sinaweibo2" title="分享到新浪微博" class="shareitm sinawb f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_qq2" title="分享到QQ空间" class="shareitm qqzone f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_qqweibo2" title="分享到腾讯微博" class="shareitm qqweibo f-bkicons">&nbsp;</span>
+                <div id="$_shareBtn_weixin2" title="分享到微信" class="shareitm weixin f-bkicons">
+<div class="code2dimlayer fc06">
+    <img src="http://blog.163.com/bitMaxImageGen.do?url=http://zwssd1980.blog.163.com/blog/static/30296492008310111910588&w=100&h=100&act=qbbkfxtj_20150420_05">
+    <div class="tips">
+        <p>用微信&nbsp;&nbsp;“扫一扫”</p>
+        <p>将文章分享到朋友圈。</p>
+    </div>
+    <a class="close">&nbsp;</a>
+</div>
+                </div>
+                <div id="$_shareBtn_yixin2" title="分享到易信" class="shareitm yixin f-bkicons">
+<div class="code2dimlayer fc06">
+    <img src="http://blog.163.com/bitMaxImageGen.do?url=http://zwssd1980.blog.163.com/blog/static/30296492008310111910588&w=100&h=100&act=qbbkfxtj_20150420_06">
+    <div class="tips">
+        <p>用易信&nbsp;&nbsp;“扫一扫”</p>
+        <p>将文章分享到朋友圈。</p>
+    </div>
+    <a class="close">&nbsp;</a>
+</div>
+                </div>
+              </div>
+              <a class="pright fc03 noul" target="_blank" href="http://www.lofter.com/app?act=qbbkrzydb_20150408_01">&nbsp;&nbsp;下载LOFTER</a>
+              <a class="pright fc03 noul" target="_blank" href="http://yxp.163.com">我的照片书&nbsp;&nbsp;|</a>
+          </div>
+          
+        </div>
+
+        <div>
+        
+        </div>
+
+        <div class="nbw-blog-start"></div>
+        <div class="bct fc05 fc11 nbw-blog ztag"><p>在开篇之前，先讲题外话，说一说我为什么选择Linux Sybase，兴许大家会有些共鸣。 我不是计算机科班出身，也不是IT业中人，只是个电脑爱好者，玩游戏，装程序，上网瞎逛，DOS，Win31，Win95，WinNT，样样都捣鼓一下。虽说也学了一些杂七杂八的东西，但看着家里先后花了近两万块捧回来的老中青三台电脑（从486、Pentium到赛扬）一天天地贬值，到如今连三千块也不值，心里不由想到该学一些有用的&ldquo;本领&rdquo;了，也算是对得起自己的&ldquo;巨额&rdquo;投资......</p><p>Linux上Sybase ASE11.9.2的安装、配置与使用之新手上路篇</p><p><br>胡国勇（<a rel="nofollow" href="mailto:huguoyong@163.net"  >huguoyong@163.net</a>）</p><p><br>在开篇之前，先讲题外话，说一说我为什么选择Linux Sybase，兴许大家会有些共鸣。 我不是计算机科班出身，也不是IT业中人，只是个电脑爱好者，玩游戏，装程序，上网瞎逛，DOS，Win31，Win95，WinNT，样样都捣鼓一下。虽说也学了一些杂七杂八的东西，但看着家里先后花了近两万块捧回来的老中青三台电脑（从486、Pentium到赛扬）一天天地贬值，到如今连三千块也不值，心里不由想到该学一些有用的&ldquo;本领&rdquo;了，也算是对得起自己的&ldquo;巨额&rdquo;投资。 <br>学什么好呢？数据库容易入门，用途又广，网络社会又来了，就学数据库在网络上的应用吧。于是我就选择了Visual Foxpro开发前端客户程序，后台使用SQL数据库管理系统这种流行的客户机/服务器模式来学。SQL数据库有很多，选哪个厂家，什么平台呢？开始我想学WinNT MS SQL SERVER，挺流行的，参考书又多，可是哪两个软件价格惊人，虽然有D版，但版权管得越来越严，咱还是用正版软件吧&mdash;&mdash;免费操作系统就用Linux，SQL数据库就选Sybase了。为什么呢？1、Sybase是世界著名的数据库厂商，对Linux很支持，Sybase ASE for Linux就推出了多个版本，其网站产品下载、技术手册、疑难解答挺齐全的，遇上问题容易找到解决办法。2、Sybase ASE与MS SQL SERVER是近亲，MS SQL SERVER的早期版本就是Sybase公司为微软公司开发的。两者体系相近，管理方式、命令、函数、工具差不多，你看一看两家的技术文档就知道了（我曾经买了一套MS SQL SERVER 6.5的技术手册）。学会了Sybase ASE，转头去学MS SQL SERVER，应该比较容易上手吧。 <br>对于我来说，Sybase ASE和Linux都是刚入门，很多地方还是一知半解、迷迷糊糊，主要靠自己去摸索，去走出一条路来。文中讲的是我的学习收获，不是标准答案，其中错误肯定不少，请大家指正。下面就讲讲我学Sybase ASE for Linux的过程，仅供参考。</p><p> </p><p>一、我学Sybase ASE for Linux用到的资源</p><p>（一）软件 <br>1、Sybase Adaptive Server Enterprise 11.9.2（以下称ASE11.9.2）的RPM包，共7个文件： <br>（1）sybase-ase-11.9.2-3.i386.rpm <br>（2）sybase-chinese-11.9.2-3.i386.rpm <br>（3）sybase-common-11.9.2-3.i386.rpm <br>（4）sybase-doc-11_9_2-1_i386.rpm <br>（5）sybase-monserver-11.9.2-3.i386.rpm <br>（6）sybase-openclient-11.1.1-3.i386.rpm <br>（7）sybase-sqlremote-6.0.2-1.i386.rpm <br>我是从Sybase公司的网站上面下载的，需要注册一下才能下载。网址是： <br><a rel="nofollow" href="http://www.sybase.com/"  >http://www.sybase.com</a> <br>2、ASE11.9.2的补丁，共两个文件： <br>（1）EBF9820.tgz&mdash;&mdash;补丁程序 <br>（2）EBF9820.ltr&mdash;&mdash;文档 <br>我是从Sybase中国公司的网站上面下载的，网址是： <br><a rel="nofollow" href="http://www.sybase.com.cn/"  >http://www.sybase.com.cn</a> <br>3、Windows平台的ASE管理工具 <br>（1）asentlnx.exe。这是从Sybase公司的网站下载的。安装后有如下工具： <br>①Sybase Central&mdash;&mdash;管理ASE数据库的图形界面工具 <br>②SQL Modeler&mdash;&mdash;强大的客户/服务器应用程序设计工具（可惜我不会用！） <br>③Dsedit&mdash;&mdash;设置客户端接口文件（sql.ini）的图形界面工具 <br>④OC OS Config Utility&mdash;&mdash;设置客户端机器的环境变量、网络驱动程序等的工具 <br>⑤Sybase System11 ODBC驱动程序 <br>（2）sybase11.exe。这是我从<a rel="nofollow" href="http://www.linuxbyte.net/"  >http://www.linuxbyte.net</a>网站下载的。安装后有如下工具： <br>①Sybase SQL Server Manager&mdash;&mdash;管理ASE数据库的图形界面工具 <br>②Sybase Monitor Client&mdash;&mdash;监控SQL Server的图形界面工具 <br>③SQLEDIT&mdash;&mdash;设置客户端接口文件（sql.ini）的图形界面工具 <br>④SYBPING&mdash;&mdash;测试客户端与SQL Server的连通情况的图形界面工具 <br>⑤WISQL32&mdash;&mdash;执行SQL查询的图形界面工具 <br>Sybase SQL Server Manager和WISQL32在我的系统中执行有些小问题，不知何故。 <br>4、图形界面的SQL查询工具 <br>（1）WinSQL Lite 3.8。这是Windows平台上的软件，推荐使用，是免费版，可在<a rel="nofollow" href="http://www.indus-soft.com/winsql"  >http://www.indus-soft.com/winsql</a>下载，需要在网站上注册，取得一个注册码。WinSQL还有一个功能更强大的专业版，但购买一个单用户许可证要149美金。 <br>（2）WISQL32。上面已讲过。 <br>（3）sybquery-0.2.0.tar.gz。这是X-Windows上的软件。可在<a rel="nofollow" href="http://www.linuxbyte.net/"  >http://www.linuxbyte.net</a>网站下载。 <br>（4）jisql。这是Sybase公司开发的基于Java的图形界面的SQL查询工具，可在Windows平台和Linux平台运行。可惜我一直没能用起来。 <br>5、Ribo工具。这是Sybase公司开发的基于Java的图形界面工具，用来捕获和显示使用TDS表格式数据流协议的客户端和服务器之间传递的数据，可在Windows平台和Linux平台运行。我不懂怎么用。 <br>6、Windows平台的终端工具。我选用NetTerm4.2登录Linux，命令可复制、粘贴，可回卷屏幕翻查，方便多了。可在华军软件网站（<a rel="nofollow" href="http://www.newhua.com/"  >http://www.newhua.com</a>）下载。</p><p>（二）技术文档 <br>1、英文文档：在/opt/sybase-11.9.2/doc/PDF下面有三十个文档（其中两个重复）： <br>（1）aserb.pdf&mdash;&mdash;Linux、Intel平台的Sybase Adaptive Server Enterprise 11.9.2版本公告 <br>（2）ocsrb.pdf&mdash;&mdash;Linux、Intel平台的Open Client及Server产品（11.1.1版）版本公告 <br>（3）asem1192.pdf&mdash;&mdash;Sybase Adaptive Server Enterprise Monitor 11.9.2版本公告 <br>（4）asefun92.pdf&mdash;&mdash;Sybase Adaptive Server Enterprise 11.9.2新功能 <br>（5）whatsup.pdf&mdash;&mdash;Sybase ASE的新特点 <br>（6）uxinstall.pdf&mdash;&mdash;Linux、Intel平台的Sybase ASE安装指南 <br>（7）aseuxcfg.pdf&mdash;&mdash;配置Unix平台的Adaptive Server Enterprise <br>（8）u_config.pdf&mdash;&mdash;Unix平台的Open Client与Server配置指南</p><p>本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：<a rel="nofollow" href="http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628.shtml"  >http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628.shtml</a></p><p>（9）sag.pdf&mdash;&mdash;Sybase ASE系统管理指南 <br>（10）perform.pdf&mdash;&mdash;Sybase ASE性能优化指南 <br>（11）mngmonas.pdf&mdash;&mdash;Sybase ASE的管理与监控 <br>（12）utprogux.pdf&mdash;&mdash;Sybase ASE的Unix工具组 <br>（13）sqlref_1.pdf&mdash;&mdash;Sybase ASE参考手册（卷1：命令与函数） <br>（14）sqlref_2.pdf&mdash;&mdash;Sybase ASE参考手册（卷2：存储过程） <br>（15）sqlref_3.pdf&mdash;&mdash;Sybase ASE参考手册（卷3：数据类型与系统表） <br>（16）svrtsg1.pdf&mdash;&mdash;Sybase ASE故障解除及错误信息手册（卷1） <br>（17）svrtsg2.pdf&mdash;&mdash;Sybase ASE故障解除及错误信息手册（卷2） <br>（18）svrtsg3.pdf&mdash;&mdash;Sybase ASE故障解除及错误信息手册（卷3） <br>（19）navigate.pdf&mdash;&mdash;Sybase ASE任务导航与命令速查 <br>（20）mg_gde.pdf&mdash;&mdash;迁移到Sybase ASE11.5 <br>（21）sqlug.pdf&mdash;&mdash;Sybase ASE Transact-SQL用户指南 <br>（22）monbook.pdf&mdash;&mdash;Sybase ASE Monitor Server用户指南 <br>（23）histserv.pdf&mdash;&mdash;ASE Monitor Historical Server用户指南 <br>（24）clilib.pdf&mdash;&mdash;Sybase Adaptive Server Monitor的Client Library程序员指南 <br>（25）glossary.pdf&mdash;&mdash;Sybase Adaptive Server Enterprise词汇表 <br>（26）omnintro.pdf&mdash;&mdash;OmniConnect简介 <br>（27）omni_ug.pdf&mdash;&mdash;OmniConnect Component Intergration Services用户指南 <br>（28）connim.pdf、imug.pdf&mdash;&mdash;InfoMaker用户指南 <br>（29）sqlremote.pdf&mdash;&mdash;使用SQL Remote进行数据复制 <br>2、中文文档：在Sybase中国公司网站下载，共6个文档，虽然是关于ASE12的，仍有很大参考价值： <br>（1）Sybase ASE12中文参考手册(卷1：构件块) <br>（2）Sybase ASE12中文参考手册(卷2：命令) <br>（3）Sybase ASE12中文参考手册(卷3：过程) <br>（4）Sybase ASE12中文参考手册(卷4：表格及手册索引) <br>（5）使用Adaptive Server分布式事务管理功能 <br>（6）Adaptive Server Enterprise中的Java</p><p>（三）网站、论坛、新闻组。当你遇到问题时，它们就是你的救星。 <br>1、网站：首选Sybase公司的网站，资料非常丰富，可就是英文的，真头疼，慢慢看吧。Sybase中国公司的网站上也有一些技术支持。其次是<a rel="nofollow" href="http://www.linuxbyte.net/"  >http://www.linuxbyte.net</a>网站，Linux上的数据库软件真不少，技术资料也多，每天要去。还有<a rel="nofollow" href="http://www.edbarlow.com/"  >http://www.edbarlow.com</a>（Sybase应用软件）、<a rel="nofollow" href="http://perso.wanadoo.fr/dbadevil/"  >http://perso.wanadoo.fr/dbadevil/</a>（Sybase软件、技术资料）、<a rel="nofollow" href="http://www.mbay.net/~mpeppler"  >http://www.mbay.net/~mpeppler</a>（一位Sybase专家的主页，有很多关于Sybase的链接，ASE on Linux FAQ）等等。 <br>2、论坛：当然是中国Linux论坛了（<a rel="nofollow" href="http://www.linuxforum.net/"  >http://www.linuxforum.net</a>）。&ldquo;Linux平台数据库&rdquo;版一天去好几趟。 <br>3、新闻组：有关Linux上的ASE的新闻组服务器：forums.sybase.com，外国高手很多。</p><p>（四）书籍 <br>1、《Sybase数据库速成培训》，鲍永刚、龙冬云编，电子工业出版社出版。该书简明介绍了Sybase数据库的组成、数据库系统管理和T-SQL语言，并用大量例子说明建立和管理数据库的操作过程。此书堪称价廉物美，把它吃透，Sybase就算基本入门了。 <br>2、《SYBASE SQL Server 11参考大全》，R.兰金斯等著，希望图书创作室译，宇航出版社出版。此书翻译得一般，我一般将它当作&ldquo;百科全书&rdquo;来翻查。 <br>3、《14天自学教程&mdash;&mdash;SQL》，Bryan Morgan、Jeff Perkins著，邓洪涛、陈越译，清华大学出版社出版，是关系数据库理论和SQL语言的入门书。</p><p> </p><p>二、我安装ASE11.9.2的过程</p><p>（一）软硬件要求 <br>Linux上的ASE11.9.2需要Linux核心版本为2.2.5、glibc-2.07-29或以上，使用TCP/IP协议，内存推荐128M以上，磁盘空间需要200M以上。 <br>我最&ldquo;牛&rdquo;的机子配置是赛扬300A、192M、10G，就用它来装了ASE11.9.2。先把Redhat7.2装好，主机名是DBSERVER，IP地址是192.168.0.1，在硬盘上划出1G的分区作为ASE11.9.2的数据库存储空间，格式化成ex3文件系统，挂在根目录下的/db。 <br>本来，ASE11.9.2手册中说在正式应用中数据库设备必须使用裸设备（Raw Device），并推荐使用硬盘分区建立数据库设备，强调不能使用操作系统文件，否则系统出现故障后难以恢复（因为操作系统高速缓存不会马上把数据写入磁盘，一旦系统崩溃，内存中的数据丢失，就破坏了数据库的参照完整性）。但据ASE11.9.2的版本公告讲，Linux上的ASE11.9.2不支持裸设备，为保证系统能正常恢复，Linux上的ASE11.9.2使用O_SYNC标志打开数据库设备，以保证数据尽快写入磁盘，但是这样会影响系统的性能。</p><p>（二）使用RPM工具把ASE产品解包复制到硬盘中 <br>1、在Linux控制台模式下以root用户登录。 <br>2、装载光盘（我把所有软件刻成一张光盘）： <br>#mount -t iso9660 /dev/cdrom /mnt/cdrom <br>3、首先解包sybase-common-11.9.2-3.i386.rpm。 <br>#rpm -hiv /mnt/cdrom/sybase-common-11.9.2-3.i386.rpm <br>4、解包复制其他产品。 <br>#rpm -hiv /mnt/cdrom/sybase-ase-11.9.2-3.i386.rpm <br>#rpm -hiv /mnt/cdrom/sybase-chinese-11.9.2-3.i386.rpm <br>#rpm -hiv /mnt/cdrom/sybase-openclient-11.1.1-3.i386.rpm <br>#rpm -hiv /mnt/cdrom/sybase-doc-11_9_2-1_i386.rpm <br>#rpm -hiv /mnt/cdrom/sybase-monserver-11.9.2-3.i386.rpm <br>#rpm -hiv /mnt/cdrom/sybase-sqlremote-6.0.2-1.i386.rpm <br>5、卸载光盘。 <br>#umount /dev/cdrom <br>6、RPM工具在解包时创建了sybase用户和sybase组。此时sybase用户的帐号是锁住的，必须将其解锁并更改密码。然后将/db的读写权限只授予sybase用户。 <br>7、修改系统内存配置。在root用户登录文件中加入以下语句（以bash用户，.bash_profile为例。更改系统内存值为60M）：echo &quot;62914560&quot; &gt; /proc/sys/kernel/shmmax <br>8、重新启动系统。 <br>9、在Linux控制台模式下以sybase用户登录，会自动执行一文件设置环境变量等。在/db下建一目录/sybsystem。 <br>10、如果你使用网络，请配置好网卡。即使你不使用网络，也要在loopback状态下检查网络配置是否正确，方法如下：在主机上用telnet localhost命令登录，不必退出，用同样的命令再登录一次，然后用两次exit命令退出系统。如果执行正常，网络配置就OK了。</p><p>（三）在X-Windows中使用srvbuild工具配置ASE产品 <br>1、用sybase用户登录X-Windows，执行sybase安装目录（/opt/sybase-11.9.2）下/bin/srvbuild命令。</p><p>本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：<a rel="nofollow" href="http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_2.shtml"  >http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_2.shtml</a></p><p>2、在srvbuild窗口中，选择要安装Server类型。我把四种Server都选上。 <br>3、给Server命名。我将Adaptive Server命名为TEST，相应地，Backup Server自动命名为TEST_back，Monitor Server命名为TEST_mon，XP Server命名为TEST_XP。点击OK按钮，进入各Server的配置过程。 <br>4、配置Adaptive Server。填写或选择以下内容： <br>Master device path（主设备路径）：/db/sybsystem/master.dat <br>Master device size（MB）（主设备大小)：60 <br>Master database size（MB）（主数据库大小）：20 <br>Sybsystemprocs device path（系统存储过程设备路径）：/db/sybsystem/systemprocs.dat <br>Sybsystemprocs device size（MB）（系统存储过程设备大小）：60 <br>Sybsystemprocs database size（MB）（系统存储过程数据库大小）：60 <br>Error log path（错误日志路径）：/opt/sybase-11.9.2/install/TEST.log <br>Transport type（传输协议类型）：tcp <br>Host name（主机名）：192.168.0.1 <br>Port number（监听端口号）：4100 <br>点击OK按钮，进入下一配置过程。 <br>5、配置Backup Server。填写或选择以下内容： <br>Error log path：/opt/sybase-11.9.2/install/TEST_back.log <br>Tape configuration file：/opt/sybase-11.9.2/backup_tape.cfg <br>Language：（不填） <br>Character set：（不填） <br>Maximum number of network connections：25 <br>Maximum number of server connections：20 <br>Transport type：tcp <br>Host name：192.168.0.1 <br>Port number：4200 <br>点击OK按钮，进入下一配置过程。 <br>6、配置Monitor Server。填写或选择以下内容： <br>Maximum number of connections：5 <br>Error log path：/opt/sybase-11.9.2/install/TEST_mon.log <br>Configuration file path：/opt/sybase-11.9.2/install/TEST_mon.cfg <br>Share memory directory：/opt/sybase-11.9.2 <br>Transport type：tcp <br>Host name：192.168.0.1 <br>Port number：4300 <br>点击OK按钮，进入下一配置过程。 <br>7、配置XP Server。填写或选择以下内容： <br>Transport type：tcp <br>Host name：192.168.0.1 <br>Port number：4400 <br>点击Build Server按钮，开始创建Server，这时出现一个窗口，你可以看到整个创建过程。如果有显示以下类似信息，表示创建Server成功： <br>…… <br>Server TEST was successfully created. <br>Done. <br>…… <br>8、创建Server成功后，系统就会问你是否将Server本地化（Localize），即是用另外一种语言代替默认的us_english language，以及改变默认的iso_1字符集和Binary索引顺序。我的选择是NO。为什么呢？我曾经把中文（eucgb）设为默认字符集，反而不支持中文大字集，因为eucgb是基于GB2312标准的。我查了Sybase的手册中一些关于本地化的说明，得出的印象是，在ASE中有Unicode转换机制，可以转换来自不同字符集的服务器或客户端的数据。我的应用也证明，使用ASE的默认的语言、字符集、索引顺序来处理中文是可行的。 <br>9、安装成功后要做的几件事。首先在Linux控制台模式下以sybase用户登录。 <br>①确认Server是否在运行。使用$SYBASE/install/下的showserver命令（$SYBASE表示sybase的安装目录），应该可看见系统有几个sybase相关进程。或者用$SYBASE/bin/下的isql -Usa -P -STEST命令来登录Server，应该可以看见isql的提示符&ldquo;1&gt;&rdquo;，再键入exit就可以退出了。 <br>②设置sa帐户的口令。装好Server后，系统自动建立sa用户，即系统管理员，对整个系统拥有最大的权力，但这时sa的口令是空的，必须马上更改。 <br>$SYBASE/bin/isql -Usa -P -STEST <br>1&gt;sp_password null,新口令 <br>2&gt;go <br>③关闭主设备缺省状态。否则用户的数据库会安装在主设备上。 <br>$SYBASE/bin/isql -Usa -STEST <br>Password：（输入新口令） <br>1&gt;sp_diskdefault master，defaultoff <br>2&gt;go</p><p>（四）安装语法数据库和示例数据库 <br>先建立一个放置语法数据库和示例数据库的数据库设备，大小为10M，并设置为缺省状态。 <br>$SYBASE/bin/isql -Usa -STEST <br>Password：（输入口令） <br>1&gt;disk init name = &quot;sybsyntaxdev&quot;, <br>2&gt;physname = &quot;/db/sybsystem/sybsyntaxdev.dat&quot;, <br>3&gt;vdevno = 2,size = 5120 <br>4&gt;go <br>1&gt;sp_diskdefault sybsyntaxdev，defaulton <br>2&gt;go <br>1、安装sybsyntax语法数据库。这是通过$SYBASE/scripts/ins_syn_sql这个脚本文件来安装的。但ins_syn_sql需要修改一下，去掉开头用来指定缺省数据库设备的一段语句，加入&ldquo;create database sybsyntax&rdquo;一句（具体请参考《Linux、Intel平台的Sybase ASE安装指南》7-14页、7－15页）。然后执行以下命令： <br>$SYBASE/bin/isql -Usa -P口令 -STEST &lt; $SYBASE/scripts/ins_syn_sql <br>语法数据库安装好后，可用系统存储过程sp_syntax查询Transact-SQL语言、系统存储过程、Sybase工具的使用帮助。例如要查询select命令的用法： <br>$SYBASE/bin/isql -Usa -STEST <br>Password：（输入口令） <br>1&gt;sp_syntax &quot;select&quot; <br>2&gt;go <br>2、安装pubs2、pubs3示例数据库。技术文档中的例子就是来自示例数据库。执行以下命令： <br>$SYBASE/bin/isql -Usa -P口令 -STEST &lt; $SYBASE/scripts/installpubs2 <br>$SYBASE/bin/isql -Usa -P口令 -STEST &lt; $SYBASE/scripts/installpubs3</p><p>（五）安装ASE补丁 <br>据Sybase公司讲，EBF9820.tgz修正了ASE11.9.2已知的一些问题，建议尽快安装。 <br>1、先关闭Server。 <br>$SYBASE/bin/isql -Usa -STEST <br>Password：（输入口令） <br>1&gt;shutdown SYB_BACKUP &amp;&amp;关闭Backup Server <br>2&gt;go <br>1&gt;shutdown &amp;&amp;关闭Adaptive Server <br>2&gt;go <br>$SYBASE/bin/isql -Usa -P口令 -STEST_mon <br>1&gt;sms_shutdown &amp;&amp;关闭Monitor Server <br>2&gt;go <br>2、在Linux控制台模式下以root用户登录。 <br>#mkdir /tmp/SWR &amp;&amp;建立放置补丁的临时目录 <br>#mount -t iso9660 /dev/cdrom /mnt/cdrom &amp;&amp;装载光盘 <br>#cp /mnt/cdrom/EBF9820.tgz /tmp/SWR &amp;&amp;将补丁复制到临时目录 <br>#cd /tmp/SWR <br>#gunzip -S .tgz EBF9820.tgz <br>#tar xvf EBF9820.tar</p><p>本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：<a rel="nofollow" href="http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_3.shtml"  >http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_3.shtml</a></p><p>#rpm -hiv /tmp/SWR/ebf9820/RPMS/sybase-SWR-9820-1.i386.rpm <br>重新设置sybase用户对$SYBASE的读写权限。 <br>退出root用户登录。 <br>3、以sybase用户登录，启动Adaptive Server。 <br>$SYBASE/install/startserver -f RUN_TEST</p><p>呵呵，费了好大的劲啊，总算装好了。怎么用呢？</p><p><br>三、我使用ASE11.9.2</p><p>Sybase数据库管理系统体系庞大，功能完整，我刚入门，很多新概念没有消化、很多东西不知道是做什么用，只能讲讲自己已经用上的。我日常的使用是这样，Linux主机在打开电源后就不管了，事情都是在Windows平台上做的，或是用NetTerm登录Linux，做一些管理任务和使用isql工具连接ASE进行数据库操作，或是用WinSQL工具进行数据库操作，或是用Sybase Central管理数据库。</p><p>（一）Server的启动与关闭 <br>先说说四种Server的作用。Adaptive Server Enterprise是基于客户机/服务器体系结构的关系数据库管理系统，其余三种Server是辅助它的。Backup Server负责数据库的备份（转储）和恢复（加载）。Monitor Server负责提供ASE的运行情况和性能统计数据。XP Server负责管理和执行扩展存储过程（ESPs）。 <br>1、Server的启动 <br>有两种方式：一是在Linux控制台模式发出命令启动Adaptive Server、Backup Server、Monitor Server，二是Linux启动时自动启动以上三种Server。XP Server是由Adaptive Server在调用扩展存储过程时启动的。 <br>我一般是这样启动的，以sybase用户登录（对主设备所在的/db有读写权限），发出如下命令： <br>$SYBASE/install/startserver -f RUN_TEST &amp;&amp;启动Adaptive Server <br>$SYBASE/install/startserver -f RUN_TEST_back &amp;&amp;启动Backup Server <br>以上两个命令也可合起来：$SYBASE/install/startserver -f RUN_TEST -f RUN_TEST_back，这样就同时启动了Adaptive Server和Backup Server。 <br>启动Monitor Server，使用命令：monserver -STEST -MTEST_mon -Usa -P口令 <br>Servedr启动后，要定时查看日志（在$SYBASE/install目录下的TEST*.log文件），以便发现问题及时解决。 <br>2、Server的关闭 <br>以sybase用户登录，执行以下命令： <br>$SYBASE/bin/isql -Usa -STEST <br>Password：（输入口令） <br>1&gt;shutdown SYB_BACKUP &amp;&amp;关闭Backup Server <br>2&gt;go <br>1&gt;shutdown &amp;&amp;关闭Adaptive Server <br>2&gt;go <br>关闭Backup Server后，至少等30秒后才可以重新启动它。 <br>在缺省状态下，Monitor Server会监测到Adaptive Server停止运行，然后自动关闭。你也可以手动关闭Monitor Server，执行以下命令： <br>$SYBASE/bin/isql -Usa -STEST_mon <br>Password：（输入口令） <br>1&gt;sms_shutdown <br>2&gt;go</p><p>（二）isql的使用 <br>$SYBASE的bin子目录中有一些实用工具，其中最有用的是isql，利用它可连接Server进行数据库操作。其语法如下： <br>isql -U登录名 -P口令 <br>进入系统后，系统显示序号和大于号提示： <br>1&gt; <br>这时用户可以输入命令，每个命令既可在一行内输入，也可在多行内输入，每行结束时按回车键。一个命令输入完毕时，在新的一行输入go并按回车键，这时命令开始执行并在屏幕显示执行结果。上面已经有很多使用isql的例子了。isql是在Linux控制台模式下的命令行工具，使用起来毕竟不太方便（如果用NetTerm登录Linux，再使用isql，就比较好一点）。我常用的是Windows平台上的WinSQL软件。</p><p>（三）Sybase的有关概念 <br>1、数据库设备（Device）：Sybase的数据库和事务日志都是建立在数据库设备上的，它可以是物理磁盘、磁盘分区或操作系统文件。使用disk init命令建立数据库设备，使用diskdefault命令指定缺省数据库设备，并且可以指定多个缺省数据库设备。建立数据库时不指定数据库设备，则在缺省数据库设备上建立。例如执行命令： <br>$SYBASE/bin/isql -Usa -STEST <br>Password：（输入口令） <br>1&gt;disk init name = &quot;userdev&quot;, &amp;&amp;设备名字为userdev <br>2&gt;physname = &quot;/db/sybsystem/userdev.dat&quot;, &amp;&amp;设备文件名为userdev.dat <br>3&gt;vdevno = 3, &amp;&amp;设备号为3 <br>4&gt;size = 51200 &amp;&amp;大小为100M（51200块，1块＝2k） <br>5&gt;go <br>1&gt;sp_diskdefault userdev，defaulton &amp;&amp;指定为缺省数据库设备 <br>2&gt;go <br>2、数据库（Database）：是表及其相关数据和操作规则及完整性约束条件的集合，包括以下数据库对象：表（Tables）、参照完整性约束、核对完整性约束、规则、缺省值、存储过程、触发器、视图。因此，数据库是一个容器，只有先建数据库，才能建表。一个数据库可以放在多个数据库设备上，一个数据库设备可以放置多个数据库。具体内容请看看讲关系数据库的书。 <br>3、事务日志：对数据库的每次修改，都可被自动记录在一个系统表中，这个系统表就叫事务日志。任何修改总是先记录日志，然后才做实际的修改。事务日志保证了在出现故障时可以将数据库恢复到出错前的状态。数据库的事务日志最好不要跟数据库放在同一设备上。 <br>4、用户：Sybase的用户分为两种，一种是SQL服务器用户（登录账号），另一种是数据库用户。SQL服务器用户sa是系统管理员，对整个系统有操作权。其他SQL服务器用户都是由系统管理员创建，只有SQL服务器用户才可登录进入系统。数据库用户首先必须是SQL服务器用户，当一个SQL服务器用户创建了一个数据库或被增加为某一数据库的用户时，他才成为相应数据库的数据库用户。</p><p>（四）Sybase的Windows平台客户端软件的使用 <br>以asentlnx.exe为例。 <br>1、安装 <br>在Windows平台上，执行asentlnx.exe，解压缩出一大堆文件到临时目录。执行临时目录中的setup.exe，一直&ldquo;Next&rdquo;下去就行了。装好后在&ldquo;开始&rdquo;菜单建有&ldquo;Sybase&rdquo;程序组，里面有Sybase Central、Dsedit等工具。我的客户端软件是装在C:Sybase目录下的。 <br>2、配置客户端的接口文件 <br>客户端软件要与数据库服务器（Server）通讯，首先得知道局域网中服务器的地址。这就需要我们为客户端软件提供一本&ldquo;通讯录&rdquo;&mdash;&mdash;接口文件，即是C:Sybaseinisql.ini文件。这个接口文件记录了与服务器通讯所使用的协议、地址、端口、服务类型等信息。而编写这本&ldquo;通讯录&rdquo;的工具就是Dsedit。 <br>通过Dsedit，可以在sql.ini中为多个Server建立entry（接口）。例如，我们要为名叫TEST的Server建立entry，可以这样操作：</p><p>本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：<a rel="nofollow" href="http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_4.shtml"  >http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_4.shtml</a></p><p>（1）启动Dsedit，出现一个窗口，点击&ldquo;OK&rdquo;按钮就可以了。 <br>（2）在&ldquo;Server Object&rdquo;菜单栏中选择&ldquo;Add&rdquo;，出现&ldquo;Input Server Name&rdquo;对话框，输入&ldquo;TEST&rdquo;，点击&ldquo;OK&rdquo;按钮。 <br>（3）在&ldquo;DSEDIT1-InterfaceDriver&rdquo;窗口中，在左边的&ldquo;Server&rdquo;框中选择&ldquo;TEST&rdquo;行，在右边的框中选&ldquo;Server Address&rdquo;行，右击，选择快捷菜单中的&ldquo;Modify Attribute...&rdquo;项，出现&ldquo;Network Address Attribute&rdquo;窗口，点击&ldquo;Add&rdquo;按钮，出现&ldquo;Input Network Address For Protocol&rdquo;对话框，点击&ldquo;Add&rdquo;按钮，&ldquo;Protocol&rdquo;项选&ldquo;TCP&rdquo;，&ldquo;Network Address&rdquo;项填入&ldquo;192.168.0.1，4100&rdquo;，点击&ldquo;OK&rdquo;按钮，退回&ldquo;DSEDIT1-InterfaceDriver&rdquo;窗口中， <br>（4）在右边的框中选&ldquo;Server Address&rdquo;行，右击，选择快捷菜单中的&ldquo;Ping Server&rdquo;项，出现&ldquo;Ping&rdquo;窗口，点击&ldquo;Ping&rdquo;命令按钮，如果出现&ldquo;Open Connection to server at (192.168.0.1,4100) succeeds…&rdquo;的提示，表示配置成功了。 <br>3、使用Sybase Central <br>Sybase Central是用于管理数据库及相关产品的Windows平台工具，可用它管理服务器、数据库中的对象（表、视图、存储过程等等），还能完成通常的创建数据库、表、用户等管理任务。Sybase Central通过提供类似Windows 95资源管理器的易于使用的图形用户界面，简化了这些任务，例如，删除数据库表，只要在主窗口中选中它并单击&ldquo;删除&rdquo;。通过提供向导，Sybase Central 帮助您完成更复杂的任务，向导一步一步地指导你完成任务。有了它，你可以基本摆脱使用isql工具发出SQL命令来管理数据库，要知道用Create table之类的命令是很累人的，不过建议你还是要研究这些命令哦，这可是基础啊，因为弄明白了这些命令的参数，才能用好Sybase Central！ <br>第一次启动Sybase Central，可能会遇到点麻烦，系统会提示&ldquo;Unable to load language DLL &quot;scsslgzh&quot;&rdquo;。这主要是缺少提供中文支持的DLL文件，你可以将&ldquo;C:Sybaseasep&rdquo;目录中的scsslgen.dll文件改名为scsslgzh.dll，Sybase Central就可以正常启动了。</p><p><br>四、我的ASE＋VFP客户机/服务器应用</p><p><br>经过摸索，ASE＋VFP客户机/服务器这种模式已在我的单位初步应用起来了。现在ASE上有一个应用数据库，VFP开发的前端程序可同时在多台机器上运行。我正准备把单位这些年VFP下的数据往ASE上迁移，再修改一下原来的应用程序，使之能适应网络上的多用户环境。</p><p>（一）Sybase System11 ODBC驱动程序与数据源 <br>在Windows平台上，Sybase公司的软件有自己的专用文件与ASE进行连接和交互操作，而其他公司的软件怎样与ASE连接和交互操作呢？一条途径是通过Sybase公司提供的ODBC（公开数据库接口）驱动程序。通过这个ODBC驱动程序，我们可建立数据源（Data Source）,供应用程序使用，使之能够处理ASE上的数据。 <br>下面讲怎么建立一个数据源。在Sybase程序组中启动ODBC Data Source Administrator（或在控制面板启动ODBC Data Source项），点击&ldquo;Drivers&rdquo;选项卡，应该有Sybase System 11一行，这是我们安装asentlnx.exe时装上的。选择&ldquo;User DSN&rdquo;选项卡，点击&ldquo;Add&rdquo;按钮，出现&ldquo;Create New Data Source&rdquo;窗口，选择&ldquo;Sybase System 11&rdquo;一行，点击&ldquo;完成&rdquo;按钮，跟着出现&ldquo;ODBC Sybase Driver Setup&rdquo;窗口。在&ldquo;General&rdquo;选项卡中，在&ldquo;Data Source Name&rdquo;栏填入数据源的名字，例如DBSERVER，在&ldquo;Server Name&rdquo;栏填入你要连接到Adaptive Server的名字，例如TEST，在&ldquo;Database Name&rdquo;栏填入默认要连接的数据库名字，然后点击&ldquo;确定&rdquo;按钮就好了。</p><p>（二）远程视图与SPT <br>数据源建好后，VFP应用程序就可以用它来访问和更新服务器上的数据了。在VFP中，可以使用远程视图和SPT两种方法访问远程数据。使用远程视图是最简单、方便的方法，你可以象使用VFP本地表一样使用远程视图。SPT（SQL pass-through）是直接把SQL语句发送给服务器执行，能够在很大程度上提高客户机/服务器应用程序的性能。我目前对ASE还不熟，开发程序时只是使用远程视图。我单位原来VFP下的数据就是使用远程视图，通过自编的一个小程序升迁到服务器上的（本来Sybase提供了一个批拷贝工具bcp，用于表与操作系统文件之间的数据导出导入的，但我用起来总有问题）。 <br>本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：<a rel="nofollow" href="http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_5.shtml"  >http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_5.shtml</a></p></div>
+        <div class="nbw-blog-end"></div>
+
+        <div>
+		</div>
+
+        <div>
+		</div>
+
+		<div>
+      	  <div >
+		  	<script type="text/javascript" id="wumiiRelatedItems"></script>
+		  </div>
+		</div>
+
+        <div class="ptc phide ztag">
+          <span class="ptcp">
+            <span class="iblock bcmimg">&nbsp;</span>
+            <span class="nbc-0 nbc-0-40 ptcmt ptcmt-2">评论这张</span>
+          </span>
+        </div>
+		<div style="display:none" class="ptc phide ztag">
+          <span class="ptcp">
+            <span class="nbc-0 nbc-0-40 ptcmi">
+              <img src="http://b.bst.126.net/newpage/images/microblog.png?1" />
+            </span>
+            <span class="nbc-0 nbc-0-40 ptcmt">转发至微博</span>
+          </span>
+        </div>
+        <div class="ptc phide">
+          <a id="publishtolofter" class="toLofter" title="发布到LOFTER" target="_blank" hidefocus="true">&nbsp;</a>
+        </div>
+        
+        <div style="display:none" class="ptc phide ztag">
+          <span class="ptcp">
+            <span class="nbc-0 nbc-0-40 ptcmi">
+              <img src="http://b.bst.126.net/newpage/images/microblog.png?1" />
+            </span>
+            <span class="nbc-0 nbc-0-40 ptcmt">转发至微博</span>
+          </span>
+        </div>
+
+
+        <div class="nbw-act tbar fc03 clearfix">
+          
+          
+          <div class="editopbar" style="height:32px;line-height:32px;text-align:left;">
+            <span class="fc07">阅读(<span id="$_spaniReadCount">105</span>)</span><span class="sep fc07">|</span>
+            <span class="fc07">评论(<span id="$_spaniCommentCount">0</span>)</span>
+            <span class="sep fc07">|</span>
+            <a class="noul m2a" href="http://zwssd1980.blog.163.com/blog/getBlog.do?bid=fks_084074093087085069086085081095087086083074082082095">编辑</a>
+            <span class="sep fc07">|</span><span id="$_spanDelete" class="m2a">删除</span>
+              <span class="sep fc07">|</span><a target="_blank" class="noul m2a" href="http://q.163.com/blogPush.do?pi=3029649&ps=30296492008310111910588">推送</a>
+            <span class="sep fc07">|</span><span id="$_spanTop" class="m2a">置顶</span>
+          </div>
+          
+          
+          <div style="height:40px;line-height:40px;">
+            <div class="pleft rdif">
+              <span style="display:none" class="pleft sep sep-last fc07">|</span>
+              <div class="share-wrap pleft">
+                <span id="$_shareBtn_lofter" title="分享到LOFTER" class="shareitm lofter f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_sinaweibo" title="分享到新浪微博" class="shareitm sinawb f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_qq" title="分享到QQ空间" class="shareitm qqzone f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_qqweibo" title="分享到腾讯微博" class="shareitm qqweibo f-bkicons">&nbsp;</span>
+                <div id="$_shareBtn_weixin" title="分享到微信" class="shareitm weixin f-bkicons">
+<div class="code2dimlayer fc06">
+    <img src="http://blog.163.com/bitMaxImageGen.do?url=http://zwssd1980.blog.163.com/blog/static/30296492008310111910588&w=100&h=100&act=qbbkfxtj_20150420_11">
+    <div class="tips">
+        <p>用微信&nbsp;&nbsp;“扫一扫”</p>
+        <p>将文章分享到朋友圈。</p>
+    </div>
+    <a class="close">&nbsp;</a>
+</div>
+                </div>
+                <div id="$_shareBtn_yixin" title="分享到易信" class="shareitm yixin f-bkicons">
+<div class="code2dimlayer fc06">
+    <img src="http://blog.163.com/bitMaxImageGen.do?url=http://zwssd1980.blog.163.com/blog/static/30296492008310111910588&w=100&h=100&act=qbbkfxtj_20150420_12">
+    <div class="tips">
+        <p>用易信&nbsp;&nbsp;“扫一扫”</p>
+        <p>将文章分享到朋友圈。</p>
+    </div>
+    <a class="close">&nbsp;</a>
+</div>
+                </div>
+              </div>
+              
+              <form style="display:none" id="shareToLofterForm" method="post" target="_blank" action="http://www.lofter.com/sharetext?act=qbblogpost_20131023_04">
+                <input type="hidden" name="thirdId" value="fks_084074093087085069086085081095087086083074082082095" />
+                <input type="hidden" name="from" value="BLOGPOST" />
+                <input type="hidden" name="title" value="Linux上Sybase ASE11.9.2的安装、配置与使用" />
+                <input type="hidden" name="content" value="&lt;p&gt;在开篇之前，先讲题外话，说一说我为什么选择Linux Sybase，兴许大家会有些共鸣。 我不是计算机科班出身，也不是IT业中人，只是个电脑爱好者，玩游戏，装程序，上网瞎逛，DOS，Win31，Win95，WinNT，样样都捣鼓一下。虽说也学了一些杂七杂八的东西，但看着家里先后花了近两万块捧回来的老中青三台电脑（从486、Pentium到赛扬）一天天地贬值，到如今连三千块也不值，心里不由想到该学一些有用的&amp;ldquo;本领&amp;rdquo;了，也算是对得起自己的&amp;ldquo;巨额&amp;rdquo;投资......&lt;/p&gt;&lt;p&gt;Linux上Sybase ASE11.9.2的安装、配置与使用之新手上路篇&lt;/p&gt;&lt;p&gt;&lt;br&gt;胡国勇（&lt;a rel=&quot;nofollow&quot; href=&quot;mailto:huguoyong@163.net&quot;  &gt;huguoyong@163.net&lt;/a&gt;）&lt;/p&gt;&lt;p&gt;&lt;br&gt;在开篇之前，先讲题外话，说一说我为什么选择Linux Sybase，兴许大家会有些共鸣。 我不是计算机科班出身，也不是IT业中人，只是个电脑爱好者，玩游戏，装程序，上网瞎逛，DOS，Win31，Win95，WinNT，样样都捣鼓一下。虽说也学了一些杂七杂八的东西，但看着家里先后花了近两万块捧回来的老中青三台电脑（从486、Pentium到赛扬）一天天地贬值，到如今连三千块也不值，心里不由想到该学一些有用的&amp;ldquo;本领&amp;rdquo;了，也算是对得起自己的&amp;ldquo;巨额&amp;rdquo;投资。 &lt;br&gt;学什么好呢？数据库容易入门，用途又广，网络社会又来了，就学数据库在网络上的应用吧。于是我就选择了Visual Foxpro开发前端客户程序，后台使用SQL数据库管理系统这种流行的客户机/服务器模式来学。SQL数据库有很多，选哪个厂家，什么平台呢？开始我想学WinNT MS SQL SERVER，挺流行的，参考书又多，可是哪两个软件价格惊人，虽然有D版，但版权管得越来越严，咱还是用正版软件吧&amp;mdash;&amp;mdash;免费操作系统就用Linux，SQL数据库就选Sybase了。为什么呢？1、Sybase是世界著名的数据库厂商，对Linux很支持，Sybase ASE for Linux就推出了多个版本，其网站产品下载、技术手册、疑难解答挺齐全的，遇上问题容易找到解决办法。2、Sybase ASE与MS SQL SERVER是近亲，MS SQL SERVER的早期版本就是Sybase公司为微软公司开发的。两者体系相近，管理方式、命令、函数、工具差不多，你看一看两家的技术文档就知道了（我曾经买了一套MS SQL SERVER 6.5的技术手册）。学会了Sybase ASE，转头去学MS SQL SERVER，应该比较容易上手吧。 &lt;br&gt;对于我来说，Sybase ASE和Linux都是刚入门，很多地方还是一知半解、迷迷糊糊，主要靠自己去摸索，去走出一条路来。文中讲的是我的学习收获，不是标准答案，其中错误肯定不少，请大家指正。下面就讲讲我学Sybase ASE for Linux的过程，仅供参考。&lt;/p&gt;&lt;p&gt; &lt;/p&gt;&lt;p&gt;一、我学Sybase ASE for Linux用到的资源&lt;/p&gt;&lt;p&gt;（一）软件 &lt;br&gt;1、Sybase Adaptive Server Enterprise 11.9.2（以下称ASE11.9.2）的RPM包，共7个文件： &lt;br&gt;（1）sybase-ase-11.9.2-3.i386.rpm &lt;br&gt;（2）sybase-chinese-11.9.2-3.i386.rpm &lt;br&gt;（3）sybase-common-11.9.2-3.i386.rpm &lt;br&gt;（4）sybase-doc-11_9_2-1_i386.rpm &lt;br&gt;（5）sybase-monserver-11.9.2-3.i386.rpm &lt;br&gt;（6）sybase-openclient-11.1.1-3.i386.rpm &lt;br&gt;（7）sybase-sqlremote-6.0.2-1.i386.rpm &lt;br&gt;我是从Sybase公司的网站上面下载的，需要注册一下才能下载。网址是： &lt;br&gt;&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.sybase.com/&quot;  &gt;http://www.sybase.com&lt;/a&gt; &lt;br&gt;2、ASE11.9.2的补丁，共两个文件： &lt;br&gt;（1）EBF9820.tgz&amp;mdash;&amp;mdash;补丁程序 &lt;br&gt;（2）EBF9820.ltr&amp;mdash;&amp;mdash;文档 &lt;br&gt;我是从Sybase中国公司的网站上面下载的，网址是： &lt;br&gt;&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.sybase.com.cn/&quot;  &gt;http://www.sybase.com.cn&lt;/a&gt; &lt;br&gt;3、Windows平台的ASE管理工具 &lt;br&gt;（1）asentlnx.exe。这是从Sybase公司的网站下载的。安装后有如下工具： &lt;br&gt;①Sybase Central&amp;mdash;&amp;mdash;管理ASE数据库的图形界面工具 &lt;br&gt;②SQL Modeler&amp;mdash;&amp;mdash;强大的客户/服务器应用程序设计工具（可惜我不会用！） &lt;br&gt;③Dsedit&amp;mdash;&amp;mdash;设置客户端接口文件（sql.ini）的图形界面工具 &lt;br&gt;④OC OS Config Utility&amp;mdash;&amp;mdash;设置客户端机器的环境变量、网络驱动程序等的工具 &lt;br&gt;⑤Sybase System11 ODBC驱动程序 &lt;br&gt;（2）sybase11.exe。这是我从&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linuxbyte.net/&quot;  &gt;http://www.linuxbyte.net&lt;/a&gt;网站下载的。安装后有如下工具： &lt;br&gt;①Sybase SQL Server Manager&amp;mdash;&amp;mdash;管理ASE数据库的图形界面工具 &lt;br&gt;②Sybase Monitor Client&amp;mdash;&amp;mdash;监控SQL Server的图形界面工具 &lt;br&gt;③SQLEDIT&amp;mdash;&amp;mdash;设置客户端接口文件（sql.ini）的图形界面工具 &lt;br&gt;④SYBPING&amp;mdash;&amp;mdash;测试客户端与SQL Server的连通情况的图形界面工具 &lt;br&gt;⑤WISQL32&amp;mdash;&amp;mdash;执行SQL查询的图形界面工具 &lt;br&gt;Sybase SQL Server Manager和WISQL32在我的系统中执行有些小问题，不知何故。 &lt;br&gt;4、图形界面的SQL查询工具 &lt;br&gt;（1）WinSQL Lite 3.8。这是Windows平台上的软件，推荐使用，是免费版，可在&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.indus-soft.com/winsql&quot;  &gt;http://www.indus-soft.com/winsql&lt;/a&gt;下载，需要在网站上注册，取得一个注册码。WinSQL还有一个功能更强大的专业版，但购买一个单用户许可证要149美金。 &lt;br&gt;（2）WISQL32。上面已讲过。 &lt;br&gt;（3）sybquery-0.2.0.tar.gz。这是X-Windows上的软件。可在&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linuxbyte.net/&quot;  &gt;http://www.linuxbyte.net&lt;/a&gt;网站下载。 &lt;br&gt;（4）jisql。这是Sybase公司开发的基于Java的图形界面的SQL查询工具，可在Windows平台和Linux平台运行。可惜我一直没能用起来。 &lt;br&gt;5、Ribo工具。这是Sybase公司开发的基于Java的图形界面工具，用来捕获和显示使用TDS表格式数据流协议的客户端和服务器之间传递的数据，可在Windows平台和Linux平台运行。我不懂怎么用。 &lt;br&gt;6、Windows平台的终端工具。我选用NetTerm4.2登录Linux，命令可复制、粘贴，可回卷屏幕翻查，方便多了。可在华军软件网站（&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.newhua.com/&quot;  &gt;http://www.newhua.com&lt;/a&gt;）下载。&lt;/p&gt;&lt;p&gt;（二）技术文档 &lt;br&gt;1、英文文档：在/opt/sybase-11.9.2/doc/PDF下面有三十个文档（其中两个重复）： &lt;br&gt;（1）aserb.pdf&amp;mdash;&amp;mdash;Linux、Intel平台的Sybase Adaptive Server Enterprise 11.9.2版本公告 &lt;br&gt;（2）ocsrb.pdf&amp;mdash;&amp;mdash;Linux、Intel平台的Open Client及Server产品（11.1.1版）版本公告 &lt;br&gt;（3）asem1192.pdf&amp;mdash;&amp;mdash;Sybase Adaptive Server Enterprise Monitor 11.9.2版本公告 &lt;br&gt;（4）asefun92.pdf&amp;mdash;&amp;mdash;Sybase Adaptive Server Enterprise 11.9.2新功能 &lt;br&gt;（5）whatsup.pdf&amp;mdash;&amp;mdash;Sybase ASE的新特点 &lt;br&gt;（6）uxinstall.pdf&amp;mdash;&amp;mdash;Linux、Intel平台的Sybase ASE安装指南 &lt;br&gt;（7）aseuxcfg.pdf&amp;mdash;&amp;mdash;配置Unix平台的Adaptive Server Enterprise &lt;br&gt;（8）u_config.pdf&amp;mdash;&amp;mdash;Unix平台的Open Client与Server配置指南&lt;/p&gt;&lt;p&gt;本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628.shtml&quot;  &gt;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628.shtml&lt;/a&gt;&lt;/p&gt;&lt;p&gt;（9）sag.pdf&amp;mdash;&amp;mdash;Sybase ASE系统管理指南 &lt;br&gt;（10）perform.pdf&amp;mdash;&amp;mdash;Sybase ASE性能优化指南 &lt;br&gt;（11）mngmonas.pdf&amp;mdash;&amp;mdash;Sybase ASE的管理与监控 &lt;br&gt;（12）utprogux.pdf&amp;mdash;&amp;mdash;Sybase ASE的Unix工具组 &lt;br&gt;（13）sqlref_1.pdf&amp;mdash;&amp;mdash;Sybase ASE参考手册（卷1：命令与函数） &lt;br&gt;（14）sqlref_2.pdf&amp;mdash;&amp;mdash;Sybase ASE参考手册（卷2：存储过程） &lt;br&gt;（15）sqlref_3.pdf&amp;mdash;&amp;mdash;Sybase ASE参考手册（卷3：数据类型与系统表） &lt;br&gt;（16）svrtsg1.pdf&amp;mdash;&amp;mdash;Sybase ASE故障解除及错误信息手册（卷1） &lt;br&gt;（17）svrtsg2.pdf&amp;mdash;&amp;mdash;Sybase ASE故障解除及错误信息手册（卷2） &lt;br&gt;（18）svrtsg3.pdf&amp;mdash;&amp;mdash;Sybase ASE故障解除及错误信息手册（卷3） &lt;br&gt;（19）navigate.pdf&amp;mdash;&amp;mdash;Sybase ASE任务导航与命令速查 &lt;br&gt;（20）mg_gde.pdf&amp;mdash;&amp;mdash;迁移到Sybase ASE11.5 &lt;br&gt;（21）sqlug.pdf&amp;mdash;&amp;mdash;Sybase ASE Transact-SQL用户指南 &lt;br&gt;（22）monbook.pdf&amp;mdash;&amp;mdash;Sybase ASE Monitor Server用户指南 &lt;br&gt;（23）histserv.pdf&amp;mdash;&amp;mdash;ASE Monitor Historical Server用户指南 &lt;br&gt;（24）clilib.pdf&amp;mdash;&amp;mdash;Sybase Adaptive Server Monitor的Client Library程序员指南 &lt;br&gt;（25）glossary.pdf&amp;mdash;&amp;mdash;Sybase Adaptive Server Enterprise词汇表 &lt;br&gt;（26）omnintro.pdf&amp;mdash;&amp;mdash;OmniConnect简介 &lt;br&gt;（27）omni_ug.pdf&amp;mdash;&amp;mdash;OmniConnect Component Intergration Services用户指南 &lt;br&gt;（28）connim.pdf、imug.pdf&amp;mdash;&amp;mdash;InfoMaker用户指南 &lt;br&gt;（29）sqlremote.pdf&amp;mdash;&amp;mdash;使用SQL Remote进行数据复制 &lt;br&gt;2、中文文档：在Sybase中国公司网站下载，共6个文档，虽然是关于ASE12的，仍有很大参考价值： &lt;br&gt;（1）Sybase ASE12中文参考手册(卷1：构件块) &lt;br&gt;（2）Sybase ASE12中文参考手册(卷2：命令) &lt;br&gt;（3）Sybase ASE12中文参考手册(卷3：过程) &lt;br&gt;（4）Sybase ASE12中文参考手册(卷4：表格及手册索引) &lt;br&gt;（5）使用Adaptive Server分布式事务管理功能 &lt;br&gt;（6）Adaptive Server Enterprise中的Java&lt;/p&gt;&lt;p&gt;（三）网站、论坛、新闻组。当你遇到问题时，它们就是你的救星。 &lt;br&gt;1、网站：首选Sybase公司的网站，资料非常丰富，可就是英文的，真头疼，慢慢看吧。Sybase中国公司的网站上也有一些技术支持。其次是&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linuxbyte.net/&quot;  &gt;http://www.linuxbyte.net&lt;/a&gt;网站，Linux上的数据库软件真不少，技术资料也多，每天要去。还有&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.edbarlow.com/&quot;  &gt;http://www.edbarlow.com&lt;/a&gt;（Sybase应用软件）、&lt;a rel=&quot;nofollow&quot; href=&quot;http://perso.wanadoo.fr/dbadevil/&quot;  &gt;http://perso.wanadoo.fr/dbadevil/&lt;/a&gt;（Sybase软件、技术资料）、&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.mbay.net/~mpeppler&quot;  &gt;http://www.mbay.net/~mpeppler&lt;/a&gt;（一位Sybase专家的主页，有很多关于Sybase的链接，ASE on Linux FAQ）等等。 &lt;br&gt;2、论坛：当然是中国Linux论坛了（&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linuxforum.net/&quot;  &gt;http://www.linuxforum.net&lt;/a&gt;）。&amp;ldquo;Linux平台数据库&amp;rdquo;版一天去好几趟。 &lt;br&gt;3、新闻组：有关Linux上的ASE的新闻组服务器：forums.sybase.com，外国高手很多。&lt;/p&gt;&lt;p&gt;（四）书籍 &lt;br&gt;1、《Sybase数据库速成培训》，鲍永刚、龙冬云编，电子工业出版社出版。该书简明介绍了Sybase数据库的组成、数据库系统管理和T-SQL语言，并用大量例子说明建立和管理数据库的操作过程。此书堪称价廉物美，把它吃透，Sybase就算基本入门了。 &lt;br&gt;2、《SYBASE SQL Server 11参考大全》，R.兰金斯等著，希望图书创作室译，宇航出版社出版。此书翻译得一般，我一般将它当作&amp;ldquo;百科全书&amp;rdquo;来翻查。 &lt;br&gt;3、《14天自学教程&amp;mdash;&amp;mdash;SQL》，Bryan Morgan、Jeff Perkins著，邓洪涛、陈越译，清华大学出版社出版，是关系数据库理论和SQL语言的入门书。&lt;/p&gt;&lt;p&gt; &lt;/p&gt;&lt;p&gt;二、我安装ASE11.9.2的过程&lt;/p&gt;&lt;p&gt;（一）软硬件要求 &lt;br&gt;Linux上的ASE11.9.2需要Linux核心版本为2.2.5、glibc-2.07-29或以上，使用TCP/IP协议，内存推荐128M以上，磁盘空间需要200M以上。 &lt;br&gt;我最&amp;ldquo;牛&amp;rdquo;的机子配置是赛扬300A、192M、10G，就用它来装了ASE11.9.2。先把Redhat7.2装好，主机名是DBSERVER，IP地址是192.168.0.1，在硬盘上划出1G的分区作为ASE11.9.2的数据库存储空间，格式化成ex3文件系统，挂在根目录下的/db。 &lt;br&gt;本来，ASE11.9.2手册中说在正式应用中数据库设备必须使用裸设备（Raw Device），并推荐使用硬盘分区建立数据库设备，强调不能使用操作系统文件，否则系统出现故障后难以恢复（因为操作系统高速缓存不会马上把数据写入磁盘，一旦系统崩溃，内存中的数据丢失，就破坏了数据库的参照完整性）。但据ASE11.9.2的版本公告讲，Linux上的ASE11.9.2不支持裸设备，为保证系统能正常恢复，Linux上的ASE11.9.2使用O_SYNC标志打开数据库设备，以保证数据尽快写入磁盘，但是这样会影响系统的性能。&lt;/p&gt;&lt;p&gt;（二）使用RPM工具把ASE产品解包复制到硬盘中 &lt;br&gt;1、在Linux控制台模式下以root用户登录。 &lt;br&gt;2、装载光盘（我把所有软件刻成一张光盘）： &lt;br&gt;#mount -t iso9660 /dev/cdrom /mnt/cdrom &lt;br&gt;3、首先解包sybase-common-11.9.2-3.i386.rpm。 &lt;br&gt;#rpm -hiv /mnt/cdrom/sybase-common-11.9.2-3.i386.rpm &lt;br&gt;4、解包复制其他产品。 &lt;br&gt;#rpm -hiv /mnt/cdrom/sybase-ase-11.9.2-3.i386.rpm &lt;br&gt;#rpm -hiv /mnt/cdrom/sybase-chinese-11.9.2-3.i386.rpm &lt;br&gt;#rpm -hiv /mnt/cdrom/sybase-openclient-11.1.1-3.i386.rpm &lt;br&gt;#rpm -hiv /mnt/cdrom/sybase-doc-11_9_2-1_i386.rpm &lt;br&gt;#rpm -hiv /mnt/cdrom/sybase-monserver-11.9.2-3.i386.rpm &lt;br&gt;#rpm -hiv /mnt/cdrom/sybase-sqlremote-6.0.2-1.i386.rpm &lt;br&gt;5、卸载光盘。 &lt;br&gt;#umount /dev/cdrom &lt;br&gt;6、RPM工具在解包时创建了sybase用户和sybase组。此时sybase用户的帐号是锁住的，必须将其解锁并更改密码。然后将/db的读写权限只授予sybase用户。 &lt;br&gt;7、修改系统内存配置。在root用户登录文件中加入以下语句（以bash用户，.bash_profile为例。更改系统内存值为60M）：echo &amp;quot;62914560&amp;quot; &amp;gt; /proc/sys/kernel/shmmax &lt;br&gt;8、重新启动系统。 &lt;br&gt;9、在Linux控制台模式下以sybase用户登录，会自动执行一文件设置环境变量等。在/db下建一目录/sybsystem。 &lt;br&gt;10、如果你使用网络，请配置好网卡。即使你不使用网络，也要在loopback状态下检查网络配置是否正确，方法如下：在主机上用telnet localhost命令登录，不必退出，用同样的命令再登录一次，然后用两次exit命令退出系统。如果执行正常，网络配置就OK了。&lt;/p&gt;&lt;p&gt;（三）在X-Windows中使用srvbuild工具配置ASE产品 &lt;br&gt;1、用sybase用户登录X-Windows，执行sybase安装目录（/opt/sybase-11.9.2）下/bin/srvbuild命令。&lt;/p&gt;&lt;p&gt;本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_2.shtml&quot;  &gt;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_2.shtml&lt;/a&gt;&lt;/p&gt;&lt;p&gt;2、在srvbuild窗口中，选择要安装Server类型。我把四种Server都选上。 &lt;br&gt;3、给Server命名。我将Adaptive Server命名为TEST，相应地，Backup Server自动命名为TEST_back，Monitor Server命名为TEST_mon，XP Server命名为TEST_XP。点击OK按钮，进入各Server的配置过程。 &lt;br&gt;4、配置Adaptive Server。填写或选择以下内容： &lt;br&gt;Master device path（主设备路径）：/db/sybsystem/master.dat &lt;br&gt;Master device size（MB）（主设备大小)：60 &lt;br&gt;Master database size（MB）（主数据库大小）：20 &lt;br&gt;Sybsystemprocs device path（系统存储过程设备路径）：/db/sybsystem/systemprocs.dat &lt;br&gt;Sybsystemprocs device size（MB）（系统存储过程设备大小）：60 &lt;br&gt;Sybsystemprocs database size（MB）（系统存储过程数据库大小）：60 &lt;br&gt;Error log path（错误日志路径）：/opt/sybase-11.9.2/install/TEST.log &lt;br&gt;Transport type（传输协议类型）：tcp &lt;br&gt;Host name（主机名）：192.168.0.1 &lt;br&gt;Port number（监听端口号）：4100 &lt;br&gt;点击OK按钮，进入下一配置过程。 &lt;br&gt;5、配置Backup Server。填写或选择以下内容： &lt;br&gt;Error log path：/opt/sybase-11.9.2/install/TEST_back.log &lt;br&gt;Tape configuration file：/opt/sybase-11.9.2/backup_tape.cfg &lt;br&gt;Language：（不填） &lt;br&gt;Character set：（不填） &lt;br&gt;Maximum number of network connections：25 &lt;br&gt;Maximum number of server connections：20 &lt;br&gt;Transport type：tcp &lt;br&gt;Host name：192.168.0.1 &lt;br&gt;Port number：4200 &lt;br&gt;点击OK按钮，进入下一配置过程。 &lt;br&gt;6、配置Monitor Server。填写或选择以下内容： &lt;br&gt;Maximum number of connections：5 &lt;br&gt;Error log path：/opt/sybase-11.9.2/install/TEST_mon.log &lt;br&gt;Configuration file path：/opt/sybase-11.9.2/install/TEST_mon.cfg &lt;br&gt;Share memory directory：/opt/sybase-11.9.2 &lt;br&gt;Transport type：tcp &lt;br&gt;Host name：192.168.0.1 &lt;br&gt;Port number：4300 &lt;br&gt;点击OK按钮，进入下一配置过程。 &lt;br&gt;7、配置XP Server。填写或选择以下内容： &lt;br&gt;Transport type：tcp &lt;br&gt;Host name：192.168.0.1 &lt;br&gt;Port number：4400 &lt;br&gt;点击Build Server按钮，开始创建Server，这时出现一个窗口，你可以看到整个创建过程。如果有显示以下类似信息，表示创建Server成功： &lt;br&gt;…… &lt;br&gt;Server TEST was successfully created. &lt;br&gt;Done. &lt;br&gt;…… &lt;br&gt;8、创建Server成功后，系统就会问你是否将Server本地化（Localize），即是用另外一种语言代替默认的us_english language，以及改变默认的iso_1字符集和Binary索引顺序。我的选择是NO。为什么呢？我曾经把中文（eucgb）设为默认字符集，反而不支持中文大字集，因为eucgb是基于GB2312标准的。我查了Sybase的手册中一些关于本地化的说明，得出的印象是，在ASE中有Unicode转换机制，可以转换来自不同字符集的服务器或客户端的数据。我的应用也证明，使用ASE的默认的语言、字符集、索引顺序来处理中文是可行的。 &lt;br&gt;9、安装成功后要做的几件事。首先在Linux控制台模式下以sybase用户登录。 &lt;br&gt;①确认Server是否在运行。使用$SYBASE/install/下的showserver命令（$SYBASE表示sybase的安装目录），应该可看见系统有几个sybase相关进程。或者用$SYBASE/bin/下的isql -Usa -P -STEST命令来登录Server，应该可以看见isql的提示符&amp;ldquo;1&amp;gt;&amp;rdquo;，再键入exit就可以退出了。 &lt;br&gt;②设置sa帐户的口令。装好Server后，系统自动建立sa用户，即系统管理员，对整个系统拥有最大的权力，但这时sa的口令是空的，必须马上更改。 &lt;br&gt;$SYBASE/bin/isql -Usa -P -STEST &lt;br&gt;1&amp;gt;sp_password null,新口令 &lt;br&gt;2&amp;gt;go &lt;br&gt;③关闭主设备缺省状态。否则用户的数据库会安装在主设备上。 &lt;br&gt;$SYBASE/bin/isql -Usa -STEST &lt;br&gt;Password：（输入新口令） &lt;br&gt;1&amp;gt;sp_diskdefault master，defaultoff &lt;br&gt;2&amp;gt;go&lt;/p&gt;&lt;p&gt;（四）安装语法数据库和示例数据库 &lt;br&gt;先建立一个放置语法数据库和示例数据库的数据库设备，大小为10M，并设置为缺省状态。 &lt;br&gt;$SYBASE/bin/isql -Usa -STEST &lt;br&gt;Password：（输入口令） &lt;br&gt;1&amp;gt;disk init name = &amp;quot;sybsyntaxdev&amp;quot;, &lt;br&gt;2&amp;gt;physname = &amp;quot;/db/sybsystem/sybsyntaxdev.dat&amp;quot;, &lt;br&gt;3&amp;gt;vdevno = 2,size = 5120 &lt;br&gt;4&amp;gt;go &lt;br&gt;1&amp;gt;sp_diskdefault sybsyntaxdev，defaulton &lt;br&gt;2&amp;gt;go &lt;br&gt;1、安装sybsyntax语法数据库。这是通过$SYBASE/scripts/ins_syn_sql这个脚本文件来安装的。但ins_syn_sql需要修改一下，去掉开头用来指定缺省数据库设备的一段语句，加入&amp;ldquo;create database sybsyntax&amp;rdquo;一句（具体请参考《Linux、Intel平台的Sybase ASE安装指南》7-14页、7－15页）。然后执行以下命令： &lt;br&gt;$SYBASE/bin/isql -Usa -P口令 -STEST &amp;lt; $SYBASE/scripts/ins_syn_sql &lt;br&gt;语法数据库安装好后，可用系统存储过程sp_syntax查询Transact-SQL语言、系统存储过程、Sybase工具的使用帮助。例如要查询select命令的用法： &lt;br&gt;$SYBASE/bin/isql -Usa -STEST &lt;br&gt;Password：（输入口令） &lt;br&gt;1&amp;gt;sp_syntax &amp;quot;select&amp;quot; &lt;br&gt;2&amp;gt;go &lt;br&gt;2、安装pubs2、pubs3示例数据库。技术文档中的例子就是来自示例数据库。执行以下命令： &lt;br&gt;$SYBASE/bin/isql -Usa -P口令 -STEST &amp;lt; $SYBASE/scripts/installpubs2 &lt;br&gt;$SYBASE/bin/isql -Usa -P口令 -STEST &amp;lt; $SYBASE/scripts/installpubs3&lt;/p&gt;&lt;p&gt;（五）安装ASE补丁 &lt;br&gt;据Sybase公司讲，EBF9820.tgz修正了ASE11.9.2已知的一些问题，建议尽快安装。 &lt;br&gt;1、先关闭Server。 &lt;br&gt;$SYBASE/bin/isql -Usa -STEST &lt;br&gt;Password：（输入口令） &lt;br&gt;1&amp;gt;shutdown SYB_BACKUP &amp;amp;&amp;amp;关闭Backup Server &lt;br&gt;2&amp;gt;go &lt;br&gt;1&amp;gt;shutdown &amp;amp;&amp;amp;关闭Adaptive Server &lt;br&gt;2&amp;gt;go &lt;br&gt;$SYBASE/bin/isql -Usa -P口令 -STEST_mon &lt;br&gt;1&amp;gt;sms_shutdown &amp;amp;&amp;amp;关闭Monitor Server &lt;br&gt;2&amp;gt;go &lt;br&gt;2、在Linux控制台模式下以root用户登录。 &lt;br&gt;#mkdir /tmp/SWR &amp;amp;&amp;amp;建立放置补丁的临时目录 &lt;br&gt;#mount -t iso9660 /dev/cdrom /mnt/cdrom &amp;amp;&amp;amp;装载光盘 &lt;br&gt;#cp /mnt/cdrom/EBF9820.tgz /tmp/SWR &amp;amp;&amp;amp;将补丁复制到临时目录 &lt;br&gt;#cd /tmp/SWR &lt;br&gt;#gunzip -S .tgz EBF9820.tgz &lt;br&gt;#tar xvf EBF9820.tar&lt;/p&gt;&lt;p&gt;本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_3.shtml&quot;  &gt;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_3.shtml&lt;/a&gt;&lt;/p&gt;&lt;p&gt;#rpm -hiv /tmp/SWR/ebf9820/RPMS/sybase-SWR-9820-1.i386.rpm &lt;br&gt;重新设置sybase用户对$SYBASE的读写权限。 &lt;br&gt;退出root用户登录。 &lt;br&gt;3、以sybase用户登录，启动Adaptive Server。 &lt;br&gt;$SYBASE/install/startserver -f RUN_TEST&lt;/p&gt;&lt;p&gt;呵呵，费了好大的劲啊，总算装好了。怎么用呢？&lt;/p&gt;&lt;p&gt;&lt;br&gt;三、我使用ASE11.9.2&lt;/p&gt;&lt;p&gt;Sybase数据库管理系统体系庞大，功能完整，我刚入门，很多新概念没有消化、很多东西不知道是做什么用，只能讲讲自己已经用上的。我日常的使用是这样，Linux主机在打开电源后就不管了，事情都是在Windows平台上做的，或是用NetTerm登录Linux，做一些管理任务和使用isql工具连接ASE进行数据库操作，或是用WinSQL工具进行数据库操作，或是用Sybase Central管理数据库。&lt;/p&gt;&lt;p&gt;（一）Server的启动与关闭 &lt;br&gt;先说说四种Server的作用。Adaptive Server Enterprise是基于客户机/服务器体系结构的关系数据库管理系统，其余三种Server是辅助它的。Backup Server负责数据库的备份（转储）和恢复（加载）。Monitor Server负责提供ASE的运行情况和性能统计数据。XP Server负责管理和执行扩展存储过程（ESPs）。 &lt;br&gt;1、Server的启动 &lt;br&gt;有两种方式：一是在Linux控制台模式发出命令启动Adaptive Server、Backup Server、Monitor Server，二是Linux启动时自动启动以上三种Server。XP Server是由Adaptive Server在调用扩展存储过程时启动的。 &lt;br&gt;我一般是这样启动的，以sybase用户登录（对主设备所在的/db有读写权限），发出如下命令： &lt;br&gt;$SYBASE/install/startserver -f RUN_TEST &amp;amp;&amp;amp;启动Adaptive Server &lt;br&gt;$SYBASE/install/startserver -f RUN_TEST_back &amp;amp;&amp;amp;启动Backup Server &lt;br&gt;以上两个命令也可合起来：$SYBASE/install/startserver -f RUN_TEST -f RUN_TEST_back，这样就同时启动了Adaptive Server和Backup Server。 &lt;br&gt;启动Monitor Server，使用命令：monserver -STEST -MTEST_mon -Usa -P口令 &lt;br&gt;Servedr启动后，要定时查看日志（在$SYBASE/install目录下的TEST*.log文件），以便发现问题及时解决。 &lt;br&gt;2、Server的关闭 &lt;br&gt;以sybase用户登录，执行以下命令： &lt;br&gt;$SYBASE/bin/isql -Usa -STEST &lt;br&gt;Password：（输入口令） &lt;br&gt;1&amp;gt;shutdown SYB_BACKUP &amp;amp;&amp;amp;关闭Backup Server &lt;br&gt;2&amp;gt;go &lt;br&gt;1&amp;gt;shutdown &amp;amp;&amp;amp;关闭Adaptive Server &lt;br&gt;2&amp;gt;go &lt;br&gt;关闭Backup Server后，至少等30秒后才可以重新启动它。 &lt;br&gt;在缺省状态下，Monitor Server会监测到Adaptive Server停止运行，然后自动关闭。你也可以手动关闭Monitor Server，执行以下命令： &lt;br&gt;$SYBASE/bin/isql -Usa -STEST_mon &lt;br&gt;Password：（输入口令） &lt;br&gt;1&amp;gt;sms_shutdown &lt;br&gt;2&amp;gt;go&lt;/p&gt;&lt;p&gt;（二）isql的使用 &lt;br&gt;$SYBASE的bin子目录中有一些实用工具，其中最有用的是isql，利用它可连接Server进行数据库操作。其语法如下： &lt;br&gt;isql -U登录名 -P口令 &lt;br&gt;进入系统后，系统显示序号和大于号提示： &lt;br&gt;1&amp;gt; &lt;br&gt;这时用户可以输入命令，每个命令既可在一行内输入，也可在多行内输入，每行结束时按回车键。一个命令输入完毕时，在新的一行输入go并按回车键，这时命令开始执行并在屏幕显示执行结果。上面已经有很多使用isql的例子了。isql是在Linux控制台模式下的命令行工具，使用起来毕竟不太方便（如果用NetTerm登录Linux，再使用isql，就比较好一点）。我常用的是Windows平台上的WinSQL软件。&lt;/p&gt;&lt;p&gt;（三）Sybase的有关概念 &lt;br&gt;1、数据库设备（Device）：Sybase的数据库和事务日志都是建立在数据库设备上的，它可以是物理磁盘、磁盘分区或操作系统文件。使用disk init命令建立数据库设备，使用diskdefault命令指定缺省数据库设备，并且可以指定多个缺省数据库设备。建立数据库时不指定数据库设备，则在缺省数据库设备上建立。例如执行命令： &lt;br&gt;$SYBASE/bin/isql -Usa -STEST &lt;br&gt;Password：（输入口令） &lt;br&gt;1&amp;gt;disk init name = &amp;quot;userdev&amp;quot;, &amp;amp;&amp;amp;设备名字为userdev &lt;br&gt;2&amp;gt;physname = &amp;quot;/db/sybsystem/userdev.dat&amp;quot;, &amp;amp;&amp;amp;设备文件名为userdev.dat &lt;br&gt;3&amp;gt;vdevno = 3, &amp;amp;&amp;amp;设备号为3 &lt;br&gt;4&amp;gt;size = 51200 &amp;amp;&amp;amp;大小为100M（51200块，1块＝2k） &lt;br&gt;5&amp;gt;go &lt;br&gt;1&amp;gt;sp_diskdefault userdev，defaulton &amp;amp;&amp;amp;指定为缺省数据库设备 &lt;br&gt;2&amp;gt;go &lt;br&gt;2、数据库（Database）：是表及其相关数据和操作规则及完整性约束条件的集合，包括以下数据库对象：表（Tables）、参照完整性约束、核对完整性约束、规则、缺省值、存储过程、触发器、视图。因此，数据库是一个容器，只有先建数据库，才能建表。一个数据库可以放在多个数据库设备上，一个数据库设备可以放置多个数据库。具体内容请看看讲关系数据库的书。 &lt;br&gt;3、事务日志：对数据库的每次修改，都可被自动记录在一个系统表中，这个系统表就叫事务日志。任何修改总是先记录日志，然后才做实际的修改。事务日志保证了在出现故障时可以将数据库恢复到出错前的状态。数据库的事务日志最好不要跟数据库放在同一设备上。 &lt;br&gt;4、用户：Sybase的用户分为两种，一种是SQL服务器用户（登录账号），另一种是数据库用户。SQL服务器用户sa是系统管理员，对整个系统有操作权。其他SQL服务器用户都是由系统管理员创建，只有SQL服务器用户才可登录进入系统。数据库用户首先必须是SQL服务器用户，当一个SQL服务器用户创建了一个数据库或被增加为某一数据库的用户时，他才成为相应数据库的数据库用户。&lt;/p&gt;&lt;p&gt;（四）Sybase的Windows平台客户端软件的使用 &lt;br&gt;以asentlnx.exe为例。 &lt;br&gt;1、安装 &lt;br&gt;在Windows平台上，执行asentlnx.exe，解压缩出一大堆文件到临时目录。执行临时目录中的setup.exe，一直&amp;ldquo;Next&amp;rdquo;下去就行了。装好后在&amp;ldquo;开始&amp;rdquo;菜单建有&amp;ldquo;Sybase&amp;rdquo;程序组，里面有Sybase Central、Dsedit等工具。我的客户端软件是装在C:Sybase目录下的。 &lt;br&gt;2、配置客户端的接口文件 &lt;br&gt;客户端软件要与数据库服务器（Server）通讯，首先得知道局域网中服务器的地址。这就需要我们为客户端软件提供一本&amp;ldquo;通讯录&amp;rdquo;&amp;mdash;&amp;mdash;接口文件，即是C:Sybaseinisql.ini文件。这个接口文件记录了与服务器通讯所使用的协议、地址、端口、服务类型等信息。而编写这本&amp;ldquo;通讯录&amp;rdquo;的工具就是Dsedit。 &lt;br&gt;通过Dsedit，可以在sql.ini中为多个Server建立entry（接口）。例如，我们要为名叫TEST的Server建立entry，可以这样操作：&lt;/p&gt;&lt;p&gt;本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_4.shtml&quot;  &gt;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_4.shtml&lt;/a&gt;&lt;/p&gt;&lt;p&gt;（1）启动Dsedit，出现一个窗口，点击&amp;ldquo;OK&amp;rdquo;按钮就可以了。 &lt;br&gt;（2）在&amp;ldquo;Server Object&amp;rdquo;菜单栏中选择&amp;ldquo;Add&amp;rdquo;，出现&amp;ldquo;Input Server Name&amp;rdquo;对话框，输入&amp;ldquo;TEST&amp;rdquo;，点击&amp;ldquo;OK&amp;rdquo;按钮。 &lt;br&gt;（3）在&amp;ldquo;DSEDIT1-InterfaceDriver&amp;rdquo;窗口中，在左边的&amp;ldquo;Server&amp;rdquo;框中选择&amp;ldquo;TEST&amp;rdquo;行，在右边的框中选&amp;ldquo;Server Address&amp;rdquo;行，右击，选择快捷菜单中的&amp;ldquo;Modify Attribute...&amp;rdquo;项，出现&amp;ldquo;Network Address Attribute&amp;rdquo;窗口，点击&amp;ldquo;Add&amp;rdquo;按钮，出现&amp;ldquo;Input Network Address For Protocol&amp;rdquo;对话框，点击&amp;ldquo;Add&amp;rdquo;按钮，&amp;ldquo;Protocol&amp;rdquo;项选&amp;ldquo;TCP&amp;rdquo;，&amp;ldquo;Network Address&amp;rdquo;项填入&amp;ldquo;192.168.0.1，4100&amp;rdquo;，点击&amp;ldquo;OK&amp;rdquo;按钮，退回&amp;ldquo;DSEDIT1-InterfaceDriver&amp;rdquo;窗口中， &lt;br&gt;（4）在右边的框中选&amp;ldquo;Server Address&amp;rdquo;行，右击，选择快捷菜单中的&amp;ldquo;Ping Server&amp;rdquo;项，出现&amp;ldquo;Ping&amp;rdquo;窗口，点击&amp;ldquo;Ping&amp;rdquo;命令按钮，如果出现&amp;ldquo;Open Connection to server at (192.168.0.1,4100) succeeds…&amp;rdquo;的提示，表示配置成功了。 &lt;br&gt;3、使用Sybase Central &lt;br&gt;Sybase Central是用于管理数据库及相关产品的Windows平台工具，可用它管理服务器、数据库中的对象（表、视图、存储过程等等），还能完成通常的创建数据库、表、用户等管理任务。Sybase Central通过提供类似Windows 95资源管理器的易于使用的图形用户界面，简化了这些任务，例如，删除数据库表，只要在主窗口中选中它并单击&amp;ldquo;删除&amp;rdquo;。通过提供向导，Sybase Central 帮助您完成更复杂的任务，向导一步一步地指导你完成任务。有了它，你可以基本摆脱使用isql工具发出SQL命令来管理数据库，要知道用Create table之类的命令是很累人的，不过建议你还是要研究这些命令哦，这可是基础啊，因为弄明白了这些命令的参数，才能用好Sybase Central！ &lt;br&gt;第一次启动Sybase Central，可能会遇到点麻烦，系统会提示&amp;ldquo;Unable to load language DLL &amp;quot;scsslgzh&amp;quot;&amp;rdquo;。这主要是缺少提供中文支持的DLL文件，你可以将&amp;ldquo;C:Sybaseasep&amp;rdquo;目录中的scsslgen.dll文件改名为scsslgzh.dll，Sybase Central就可以正常启动了。&lt;/p&gt;&lt;p&gt;&lt;br&gt;四、我的ASE＋VFP客户机/服务器应用&lt;/p&gt;&lt;p&gt;&lt;br&gt;经过摸索，ASE＋VFP客户机/服务器这种模式已在我的单位初步应用起来了。现在ASE上有一个应用数据库，VFP开发的前端程序可同时在多台机器上运行。我正准备把单位这些年VFP下的数据往ASE上迁移，再修改一下原来的应用程序，使之能适应网络上的多用户环境。&lt;/p&gt;&lt;p&gt;（一）Sybase System11 ODBC驱动程序与数据源 &lt;br&gt;在Windows平台上，Sybase公司的软件有自己的专用文件与ASE进行连接和交互操作，而其他公司的软件怎样与ASE连接和交互操作呢？一条途径是通过Sybase公司提供的ODBC（公开数据库接口）驱动程序。通过这个ODBC驱动程序，我们可建立数据源（Data Source）,供应用程序使用，使之能够处理ASE上的数据。 &lt;br&gt;下面讲怎么建立一个数据源。在Sybase程序组中启动ODBC Data Source Administrator（或在控制面板启动ODBC Data Source项），点击&amp;ldquo;Drivers&amp;rdquo;选项卡，应该有Sybase System 11一行，这是我们安装asentlnx.exe时装上的。选择&amp;ldquo;User DSN&amp;rdquo;选项卡，点击&amp;ldquo;Add&amp;rdquo;按钮，出现&amp;ldquo;Create New Data Source&amp;rdquo;窗口，选择&amp;ldquo;Sybase System 11&amp;rdquo;一行，点击&amp;ldquo;完成&amp;rdquo;按钮，跟着出现&amp;ldquo;ODBC Sybase Driver Setup&amp;rdquo;窗口。在&amp;ldquo;General&amp;rdquo;选项卡中，在&amp;ldquo;Data Source Name&amp;rdquo;栏填入数据源的名字，例如DBSERVER，在&amp;ldquo;Server Name&amp;rdquo;栏填入你要连接到Adaptive Server的名字，例如TEST，在&amp;ldquo;Database Name&amp;rdquo;栏填入默认要连接的数据库名字，然后点击&amp;ldquo;确定&amp;rdquo;按钮就好了。&lt;/p&gt;&lt;p&gt;（二）远程视图与SPT &lt;br&gt;数据源建好后，VFP应用程序就可以用它来访问和更新服务器上的数据了。在VFP中，可以使用远程视图和SPT两种方法访问远程数据。使用远程视图是最简单、方便的方法，你可以象使用VFP本地表一样使用远程视图。SPT（SQL pass-through）是直接把SQL语句发送给服务器执行，能够在很大程度上提高客户机/服务器应用程序的性能。我目前对ASE还不熟，开发程序时只是使用远程视图。我单位原来VFP下的数据就是使用远程视图，通过自编的一个小程序升迁到服务器上的（本来Sybase提供了一个批拷贝工具bcp，用于表与操作系统文件之间的数据导出导入的，但我用起来总有问题）。 &lt;br&gt;本篇文章来源于 Linux爱好网|www.linux-love.com 原文链接：&lt;a rel=&quot;nofollow&quot; href=&quot;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_5.shtml&quot;  &gt;http://www.linux-love.com/database/20080408/LinuxshangSybase-ASE11-9-2deanzhuang-peizhiyushiyongzhixinshoushanglupian_7628_5.shtml&lt;/a&gt;&lt;/p&gt;" />
+                <input type="hidden" name="source" value="davidjory" />
+                <input type="hidden" name="sourceUrl" value="http://zwssd1980.blog.163.com/blog/static/30296492008310111910588" />
+                <input type="hidden" name="tag" value="" />
+              </form>
+              
+            </div>
+            <div class="pright rightoperatebar rightoperatebar-new">
+              <span class="f-myLikeIcons likebtn pnt pright" id="$_spanLike">喜欢</span>
+	          <span style="display:none" id="$_spanShowRecommend" class="pleft rdct  phide">
+	            <span class="pleft ul fc03"><span id="$_spanRecommendCount">0</span>人</span><span class="pleft iblock icn0 icn0-722 nbw-tgl1 nas-icn0fix">&nbsp;</span><span class="pleft iblock icn0 icn0-621 nbw-tgl0 nas-icn0fix">&nbsp;</span><span class="fc07"></span>|&nbsp;
+	          </span>
+                <span class="f-myLikeIcons reblogbtn pnt pright" id="$_spanCite">转载</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="snl">
+        <div style="display:none" class="phide bdwb bds2 bdc0 rdcnt" id="$_divRecommendContent"></div>
+        <div id="yodaoad" class="bdwb bds2 bdc0" style="display:none;_zoom:1;">&nbsp;</div>
+        <div id="$_newOldBlogLinkBottomDiv" class='top fc03 clearfix'>
+	     </div>
+	    <div class="relateblog phide">
+          <h4 class="bdwb bds2 bdc0 fc07 fs0">历史上的今天</h4>
+          <div class="cnt ztag clearfix"></div>
+        </div>
+	    <div style="display:none;visibility:hidden;width:0;height:0;overflow:hidden;" class="author">
+	      <h4 class="bdwb bds2 bdc0 fc07 fs0">最近读者</h4>
+	      <div class="cnt ztag clearfix"></div>
+	    </div>
+	    <div style="display:none;visibility:hidden;width:0;height:0;overflow:hidden;" id="hotarea" class="hotarea author ">
+	      <h4 class="bdwb bds2 bdc0 fc07 fs0">热度</h4>
+	      <div id="hotlist" class="cnt clearfix"></div>
+	    </div>
+	    <div class="phide" id="yodaoad_1" style="_zoom:1;"></div>
+	    
+	    <div class="m-lmiddlead" style="display:none">
+	        <a class="adlink" href="#" target="_blank" hidefocus="true"><img style="border:none;" id="leftmiddleadimg" /></a>
+	        <div id="flashadwrap" class="flashadwrap"></div>
+	        <iframe marginwidth="0" marginheight="0" id="lmid_iframe" style="display:none;" width="590" height="100" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+	    </div>
+	    
+	    <div>
+	    	<h4 class="bdwb bds2 bdc0 fc07 fs0" style="padding:0 0 0 10px;line-height:30px;text-align:left;">在LOFTER的更多文章</h4>
+	    	<div style="width:100%;overflow:hidden;">
+	    	<iframe style="max-width:780px;margin:10px 0 10px 5px;display:block" id="morecontent_frame" width="100%" height="125" allowtransparency="true" scrolling="no" frameborder="0" src="http://www.lofter.com/recommendblog?email=zwssd1980@163.com"></iframe>
+	    	</div>
+	    </div>
+	    <div id="loftertextlinkad" style="display:none;padding:0 6px 0 5px;">
+	      <div style="height:40px;line-height:40px;margin:15px 0 15px 0;border:1px solid #d5d5d5;background:#ffffe1;text-align:left;">
+	        <span style="float:right;height:20px;line-height:20px;padding:10px 16px 10px 0;color:#d7854e;cursor:pointer;">关闭</span>
+	        <div style="padding-left:24px;color:#000;">玩LOFTER，免费冲印20张照片，人人有奖！&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#d7854e;text-decoration:none;" href="http://www.lofter.com" target="_blank">我要抢&gt;</a></div>
+	      </div>
+	    </div>
+	    <div class="comment">
+	      <h4 class="bdwb bds2 bdc0 fc07 fs0">评论</h4>
+	      <a name="blogComment" id="blogComment"></a>
+	      <div class="ztag"></div>
+	    </div>
+	    <div class="phide" id="yodaoad_3" style="_zoom:1;"></div>
+      </div>
+      <div class="cite ztag fc03"></div>
+    </div>
+   </div>
+  </div>
+</div>
+<div class="phide nb-init">
+  <textarea name="js">
+    this.p={  m:2,
+              b:2,
+              loftPermalink:'',
+              id:'fks_084074093087085069086085081095087086083074082082095',
+              blogTitle:'Linux上Sybase ASE11.9.2的安装、配置与使用',
+              blogAbstract:'<p\>在开篇之前，先讲题外话，说一说我为什么选择Linux Sybase，兴许大家会有些共鸣。 我不是计算机科班出身，也不是IT业中人，只是个电脑爱好者，玩游戏，装程序，上网瞎逛，DOS，Win31，Win95，WinNT，样样都捣鼓一下。虽说也学了一些杂七杂八的东西，但看着家里先后花了近两万块捧回来的老中青三台电脑（从486、Pentium到赛扬）一天天地贬值，到如今连三千块也不值，心里不由想到该学一些有用的&ldquo;本领&rdquo;了，也算是对得起自己的&ldquo;巨额&rdquo;投资......</p\><p\>Linux上Sybase ASE11.9.2的安装、配置与使用之新手上路篇</p\><p\><br\>胡国勇（<a rel=\"nofollow\" href=\"mailto:huguoyong@163.net\"  \>huguoyong@163.net</a\>）</p\><p\><br\>在开篇之前，先讲题外话，说一说</p\>',
+              blogTag:'',
+              blogUrl:'blog/static/30296492008310111910588',
+              isPublished:1,
+              istop:false,
+              type:0,
+              modifyTime:1479677004874,
+              publishTime:1207797550588,
+              permalink:'blog/static/30296492008310111910588',
+              commentCount:0,
+              mainCommentCount:0,
+              recommendCount:0,
+              bsrk:-100,
+              publisherId:0,
+              recomBlogHome:false,
+              currentRecomBlog:false,
+              attachmentsFileIds:[],
+              vote:{},
+              groupInfo:{},
+              friendstatus:'',
+              followstatus:'',
+              pubSucc:'',
+              visitorProvince:'',
+              visitorCity:'',
+              visitorNewUser:false,
+              postAddInfo:{},
+              mset:'001',
+              mcon:'1',
+              srk:19900,
+              remindgoodnightblog:false,
+              isBlackVisitor:false,
+              isShowYodaoAd:false,
+              hostIntro:'',
+              hmcon:'1',
+              selfRecomBlogCount:'0',
+              lofter_single:'<iframe width="140" height="560" style="overflow:hidden;" src="http://www.lofter.com/mailEntry.do?blogad=1&blog" frameBorder="0"></iframe>'
+            }
+  </textarea>
+  <textarea name="jst" id="m-3-jst-1">
+    {list a as x}
+    {if !!x}
+    <div class="iblock nbw-fce nbw-f40">
+      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/${x.visitorName}/">
+      {if x.visitorName==visitor.userName}
+      <img alt="${x.visitorNickname|escape}" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="${fn1(x.visitorName)}&r=${visitor.imageUpdateTime}"/>
+      {else}
+      <img alt="${x.visitorNickname|escape}" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="${fn1(x.visitorName)}"/>
+      {/if}
+      </a>
+      <div class="cwd vname thide">
+        {if x.moveFrom=='wap'}
+          <a class="noul pnt" target="_blank" href="http://blog.163.com/services/wapblog.html?frompersonalbloghome"><span title="来自网易手机博客" class="iblock wapIcon">&nbsp;</span></a>
+        {elseif x.moveFrom=='iphone'}
+          <a class="noul pnt" target="_blank"><span title="来自iPhone客户端" class="iblock iphoneIcon">&nbsp;</span></a>
+        {elseif x.moveFrom=='android'}
+          <a class="noul pnt" target="_blank"><span title="来自Android客户端" class="iblock androidIcon">&nbsp;</span></a>
+        {elseif x.moveFrom=='mobile'}
+          <a class="noul pnt" target="_blank" href="http://blog.163.com/services/emsblog.html?frompersonalbloghome"><span title="来自网易短信写博" class="iblock wapIcon">&nbsp;</span></a>
+        {/if}
+        <a class="fc03 m2a"  target="_blank" hidefocus="true" href="http://blog.163.com/${x.visitorName}/">
+          ${fn(x.visitorNickname,8)|escape}
+        </a>
+      </div>
+    </div>
+    {/if}
+    {/list}
+  </textarea>
+  <textarea name="jst" id="m-3-jst-2">
+    {if !!a}
+    <a target="_blank" href="http://blog.163.com/${a.userName}/"><img class="bdwa bdc0 pnt" onerror="this.src=location.f60" src="${fn1(a.userName)}"/></a>
+    <a target="_blank" class="fc03 m2a" href="http://blog.163.com/${a.userName}/">${fn(a.nickname,8)|escape}</a>
+    <div class="intro fc05">${a.selfIntro|escape}{if great260}${suplement}{/if}</div>
+	  <div class="mbga phide xtag">
+        <div class="mbgai">&nbsp;</div>
+        <a class="fc03 xtag m2a" href="#" target="_blank"></a>
+      </div>
+    {/if}
+  </textarea>
+  <#--最新日志，群博日志-->
+  <textarea name="jst" id="m-3-jst-3">
+    {list a as x}
+    {if !!x}
+    <li class="thide"><a target="_blank" class="fc03 m2a" href="${furl()}${x.permalink}/?latestBlog">${fn(x.title,26)|escape}</a></li>
+    {/if}
+    {/list}
+  </textarea>
+  <#--推荐日志-->
+  <textarea name="jst" id="m-3-jst-4">
+    <p class="fc06">推荐过这篇日志的人：</p>
+    <div>
+      {list a as x}
+      {if !!x}
+      <div class="iblock nbw-fce nbw-f40">
+        <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/${x.recommenderName}/">
+        <img alt="${x.recommenderNickname|escape}" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="${fn1(x.recommenderName)}"/>
+        </a>
+        <div class="cwd thide">
+          <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/${x.recommenderName}/">
+            ${fn(x.recommenderNickname,6)|escape}
+          </a>
+        </div>
+      </div>
+      {/if}
+      {/list}
+    </div>
+    {if !!b&&b.length>0}
+    <p  class="fc06">他们还推荐了：</p>
+    <ul>
+    {list b as y}
+      {if !!y}
+        <li class="rrb"><span class="iblock">&#183;</span><a class="fc03 m2a" target="_blank" href="http://blog.163.com/${y.recommendBlogPermalink}/?from=blog/static/30296492008310111910588">${y.recommendBlogTitle|escape}</a></li>
+      {/if}
+    {/list}
+    </ul>
+    {/if}
+  </textarea>
+  <#--引用记录-->
+  <textarea name="jst" id="m-3-jst-5">
+    <span class="pleft fc07">转载记录：</span>
+    <ul class="tbac">
+    {list d as x}
+      <li class="clearfix">
+        <span class="pleft iblock">&#183;</span>
+        <div class="tbl thide pleft"><span><a target="_blank" class="fc07 m2a" href="${x.referBlogUrl}">${x.referBlogTitle|escape}</a></span></div>
+        <div class="tbr pleft"><span><a target="_blank" class="fc07 m2a" href="${x.referHomePage}">${x.referUserName|escape}</a></span></div>
+      </li>
+    {/list}
+    </ul>
+  </textarea>
+  <#--博主推荐-->
+  <textarea name="jst" id="m-3-jst-6">
+    {list a as x}
+    {if !!x}
+    <li class="thide"><a target="_blank" class="fc03 m2a" href="http://blog.163.com/${x.userName}/${x.permalink}/?recommendBlog" title="${x.title|default:""|escape}">${x.title|default:""|escape}</a></li>
+    {/if}
+    {/list}
+  </textarea>
+  <#--随机阅读-->
+  <textarea name="jst" id="m-3-jst-7">
+    {list a as x}
+    {if !!x}
+    <li class="thide"><a target="_blank" class="fc03 m2a" href="http://blog.163.com/${x.userName}/${x.permalink}/?personalRecomBlog" title="${x.title|default:""|escape}">${x.title|default:""|escape}</a></li>
+    {/if}
+    {/list}
+  </textarea>
+  <#--首页推荐-->
+  <textarea name="jst" id="m-3-jst-8">
+    {list a as x}
+    {if !!x}
+    <li class="thide"><a target="_blank" class="fc03 m2a" target="_blank" href="${x.blogUrl|default:""|escape}?recommendReader" title="${x.blogTile|default:""|escape}">${x.blogTile|default:""|escape}</a></li>
+    {/if}
+    {/list}
+  </textarea>
+  <#--历史上的今天-->
+  <textarea name="jst" id="m-3-jst-10">
+    <ul>
+      {list a as x}
+      {if x_index>4}{break}{/if}
+      {if !!x}
+        <li class="thide fc03">
+          <a class="m2a" target="_blank"  href="http://blog.163.com/${x.userName}/${x.permalink|default:""}"  title="${x.title|default:""|escape}">${fn1(x.title,60)|escape}</a><span class="fc07">${fn2(x.publishTime,'yyyy-MM-dd HH:mm:ss')}</span>
+        </li>
+      {/if}
+      {/list}
+    </ul>
+  </textarea>
+  <#--被推荐日志-->
+  <textarea name="jst" id="m-3-jst-11">
+    {list a as x}
+    {if !!x}
+    <li class="thide"><a target="_blank" class="fc03 m2a" href="${furl()}${x.permalink}/">${fn(x.title,26)|escape}</a></li>
+    {/if}
+    {/list}
+  </textarea>
+    <#--上一篇，下一篇-->
+  <textarea name="jst" id="m-3-jst-12">
+     {if !!(blogDetail.preBlogPermalink)}
+       <span class="ilft iblock icn0 icn0-620">&nbsp;</span>
+       <div class="pleft thide"><a class="m2a"  href="http://zwssd1980.blog.163.com/${blogDetail.preBlogPermalink}/">${blogDetail.preBlogTitle|escape}</a></div>
+     {/if}
+     {if !!(blogDetail.nextBlogPermalink)}
+       <span class="irgt iblock icn0 icn0-619">&nbsp;</span>
+       <div class="pright thide"><a class="m2a" href="http://zwssd1980.blog.163.com/${blogDetail.nextBlogPermalink}/">${blogDetail.nextBlogTitle|escape}</a></div>
+     {/if}
+  </textarea>
+  <#-- 热度 -->
+  <textarea name="jst" id="m-3-jst-13">
+    {list a as x}
+    {if !!x}
+    <div class="hotItem iblock nbw-fce nbw-f40">
+      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/${x.publisherUsername}/">
+      {if x.publisherUsername==visitor.userName}
+      <img alt="${x.publisherNickname|escape}" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="${fn1(x.publisherUsername)}&r=${visitor.imageUpdateTime}"/>
+      {else}
+      <img alt="${x.publisherNickname|escape}" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="${fn1(x.publisherUsername)}"/>
+      {/if}
+      </a>
+      <div class="cwd vname thide">
+        <a class="fc03 m2a"  target="_blank" hidefocus="true" href="http://blog.163.com/${x.publisherUsername}/">
+          ${fn(x.publisherNickname,8)|escape}
+        </a>
+      </div>
+      <a class="f-myLikeIcons hottype {if x.type==1} js-liketype{elseif x.type==2} js-reblogtype{elseif x.type==3} js-sharetype{else}{/if}" target="_blank" hidefocus="true" href="http://blog.163.com/${x.publisherUsername}/">&nbsp;</a>
+    </div>
+    {/if}
+    {/list}
+  </textarea>
+  
+  <#--  网易新闻广告  -->
+  <textarea name="jst" id="m-3-jst-14">
+            <div class="ttlbar fc06 bdwb bdc0 bds0">网易新闻</div>
+            <div class="newscnt">
+                <a class="headnews" hidefocus="true" target="_blank" href="${headlines.url_3w|escape}">
+			        <img src="${imgsize(headlines.imgsrc,240,150,true)}">
+			        <span class="icover"></span>
+			        <span class="info"><span class="imgdesc thide">${headlines.title|escape}</span></span>
+		        </a>
+		        <ul>
+		          {if defined('newslist')&&newslist.length>0}
+                    {list newslist as x}
+                    {if x_index>7}{break}{/if}
+		            <li class="thide"><a hidefocus="true" target="_blank" href="${x.url_3w|escape}" class="fc05"><span class="iblock dot">·</span>${x.title|escape}</a></li>
+		            {/list}
+                  {/if}
+		        </ul>
+		        <div class="download163news">
+		            <a class="fc03" target="_blank" hidefocus="true" href="http://www.163.com/newsapp/">下载网易新闻客户端 &gt;</a>
+		        </div>
+            </div>
+  </textarea>
+  
+  <#--右边模块结构-->
+  <textarea name="txt" id="m-3-txt-0">
+    <div class="uinfo ztag"></div>
+    <h4 class="fc07 fs0 ltt phide ztag">被推荐日志</h4>
+    <ul class="ztag blst"></ul>
+    <h4 class="fc07 fs0 ltt phide ztag">最新日志</h4>
+    <ul class="ztag blst"></ul>
+    <h4 class="fc07 fs0 ltt phide ztag">该作者的其他文章</h4>
+    <ul class="ztag blst"></ul>
+    <h4 class="fc07 fs0 ltt phide ztag">博主推荐</h4>
+    <ul class="ztag blst"></ul>
+    <h4 class="fc07 fs0 ltt phide ztag">随机阅读</h4>
+    <ul class="ztag blst"></ul>
+    <h4 class="fc07 fs0 ltt phide ztag">首页推荐</h4>
+    <ul class="ztag blst"></ul>
+    <div class="more"><a target="_blank" class="fc03 m2a" href="http://blog.163.com">更多&gt;&gt;</a></div>
+    <br/><br/>
+    <div id="yodaoad_r" style="display:none;_zoom:1;"></div>
+    <div id="lofter_single"></div>
+    <div id="blogPublicAccount"></div>
+  </textarea>
+  <#--评论模块结构-->
+  <textarea name="txt" id="m-3-txt-1">
+    <div class="publish ztag"></div>
+    <div class="bdwt bds2 bdc0 phide" id="yodaoad_2" style="_zoom:1;"></div>
+    <div class="ztag bdwt bds2 bdc0">
+      <div class="case"></div>
+      <div class="clearfix"></div>
+    </div>
+  </textarea>
+  <#--引用模块结构-->
+  <textarea name="jst" id="m-3-txt-2">
+     <div class="close">
+       <span class="ztag iblock icn0 icn0-57">&nbsp;</span>
+     </div>
+	 <div class="ztag phide"></div>
+  </textarea>
+    <#--博主发起的投票-->
+  <textarea name="jst" id="m-3-txt-3">
+    {list a as x}
+    {if !!x}
+      <li>
+      <a href="http://blog.163.com/${x.userName}/" target="_blank" class="m2a fc03">${x.nickName|escape}</a>&nbsp;&nbsp;投票给
+        {var first_option = true;}
+        {list x.voteDetailList as voteToOption}
+            {if voteToOption==1}
+              {if first_option==false},{/if}&nbsp;&nbsp;“${b[voteToOption_index]}”&nbsp;&nbsp;
+            {/if}
+        {/list}
+        {if (x.role!="-1") },“我是${c[x.role]}”&nbsp;&nbsp;{/if}
+        &nbsp;&nbsp;&nbsp;&nbsp;<span class="fc07">&nbsp;&nbsp;&nbsp;&nbsp;${fn1(x.voteTime)}</span>
+        {if x.userName=='zwssd1980'}{/if}
+    {/if}
+    {/list}
+  </textarea>
+</div>
+
+<script type="text/javascript">
+var wumiiPermaLink = "http://blog.163.com/zwssd1980/blog/static/30296492008310111910588/"; //文章的永久链接，作为文章的唯一标识
+var wumiiTags = ""; //文章标签，以英文逗号分隔，如："标签1,标签2"
+var wumiiSitePrefix = "http://blog.163.com/zwssd1980/"; //博客的主页地址，作为博客的唯一标识
+var wumiiParams = "&num=5&mode=3&pf=blog163"; //num为默认显示的相关文章数目，mode为默认的显示模式（1为文字，2为图片，3为自动）
+</script>
+<script type="text/javascript" src="http://widget.wumii.com/ext/relatedItemsWidget.htm"></script>
+</div>
+      <div class="l cl h100">&nbsp;</div>
+      <div class="r cr h100">&nbsp;</div>
+    </div>
+    <div class="nb-mb lcr bh space">
+      <div class="l bl bh">&nbsp;</div>
+      <div class="r br bh">&nbsp;</div>
+      <div class="c bc bh lcr">&nbsp;</div>
+    </div>
+  </div>
+
+</div>
+      <div class="l wl g lg h100">&nbsp;</div>
+      <div class="l wl t lt">&nbsp;</div>
+      <div class="l wl b lb">&nbsp;</div>
+      <div class="r wr g rg h100">&nbsp;</div>
+      <div class="r wr t rt">&nbsp;</div>
+      <div class="r wr b rb">&nbsp;</div>
+    </div>
+  </div>
+  <div class="nb-are nb-smb"><div class="wkg h space"><div class="l h">&nbsp;</div><div class="r h">&nbsp;</div><div class="c h">&nbsp;</div></div></div>
+<div class="nb-are nb-fot">
+  <div class="wkg h">
+    <h2>页脚</h2>
+    <div class="k">      <a rel="nofollow" class="m2a fc08" target="_blank" href="http://yxp.163.com">我的照片书</a>
+      <span class="p fc10">-</span>
+      <a rel="nofollow" class="m2a fc08" target="_blank" href="http://blog.163.com/public/theme/">博客风格</a>
+      <span class="p fc10">-</span>
+      <a rel="nofollow" class="m2a fc08" target="_blank" href="http://blog.163.com/services/wapblog.html">手机博客</a>
+      <span class="p fc10">-</span>
+      <a rel="nofollow" class="m2a fc08" target="_blank" href="http://www.lofter.com/app?act=qbboke_20150209_02">下载LOFTER APP</a>
+      
+    </div>
+    <p class="fc08">网易公司版权所有&nbsp;&copy;1997-2017</p>
+  </div>
+</div></div>
+    <!--[if lte IE 6]></div><![endif]-->
+  <!--[if lte IE 6]></div><![endif]-->
+  <div class="nb-layer" id="blog-163-com-layer"></div>
+  <div class="nb-tpl nb-init phide" id="blog-163-com-template" style="display:none;">  <textarea rows="1" cols="1" name="jst" id="nb-jst-a0">  <div class="nbw-new">
+    <span class="arw space icn1 icn1-2">&nbsp;</span>
+    <div class="{if n.length<=1}nbw-act js-nomore-102{else}nbw-act{/if}"><span class="ul hdn ztag">显示后${n.length-1}条</span><span class="sep hdn">|</span><span class="ul ztag">关闭</span></div>
+    <div class="box">{list n as x}<div class="itm thide">{if x.url!=null&&x.url!=""}<a class="m2a" href="${x.url}" target="_blank"><span class="dot">&#183;</span>${x.title}</a>{else}<a class="m2a" href="javascript:;"><span class="dot">&#183;</span>${x.title}</a>{/if}</div>{/list}</div>
+  </div>
+</textarea>
+  <textarea rows="1" cols="1" name="txt" id="nb-txt-b0">  <a class="iblock itm0" hidefocus="true" target="_blank" href="http://zwssd1980.blog.163.com/blog/getBlog.do?fromToolBarBlog&fromString=topbar">写日志</a>
+  <a class="iblock itm1" hidefocus="true" target="_blank" href="http://zwssd1980.blog.163.com/album/?fromToolBarPhoto#m=5">传相片</a>
+  <a class="iblock itm2" hidefocus="true" target="_blank" href="http://zwssd1980.blog.163.com/m/?fromToolBarMusic">音乐盒</a>
+  <a class="iblock itm5" hidefocus="true" target="_blank" href="http://blog.163.com/clone/clone.html?fromToolBarCopy">博客搬家</a>
+  <a class="iblock itm4 ztag" hidefocus="true" href="#">装扮博客</a>
+</textarea>
+  <textarea rows="1" cols="1" name="txt" id="nb-txt-b1">  <label class="fs1">正在装扮我的博客，开始</label>
+  <input class="ztag" type="button" value="换风格"/>
+  <input class="ztag" type="button" value="设置首页内容"/>
+  <input class="ztag" type="button" value="设置首页版式"/>
+  <div class="iblock cls"><span class="ul ztag">[关闭]</span></div>
+</textarea>
+  <textarea rows="1" cols="1" name="jst" id="nb-jst-d0">      {list wl as x}
+        <div class="grp">${x.g}</div>
+        {list x.l as y}
+        <a class="itm noul" href="#" hidefocus="true" name="{if typeof(y.v)=='string'}${y.v}{else}${y_index}{/if}">${y.n}</a>
+        {/list}
+      {/list}
+</textarea>
+  <textarea rows="1" cols="1" name="jst" id="nb-jst-d1">	{if defined('wl')}
+        {list wl as x}<a class="itm noul" href="#" hidefocus="true" name="${x.v}">${x.n}</a>{/list}
+    {/if}
+</textarea>
+</div>
+<script type="text/javascript">
+  window.N = {tm:{'zbtn':'nbtn',
+                  'bdc0':'bdc0','bdc2':'bdc1',
+				  'bgc0':'bgc0','bgc1':'bgc1','bgc2':'bgc2','bgh0':'bgc9',
+				  'fc00':'fc03','fc01':'fc04','fc02':'fc05','fc03':'fc06','fc04':'fc07','fc05':'fc09'}};
+  Date.servTime = '02/28/2017 21:27:49';
+  location.api = 'http://api.blog.163.com/';
+  location.msg = 'http://api.blog.163.com/msg/dwr';
+  location.dwr = 'http://api.blog.163.com/zwssd1980/dwr';
+  location.vcd = 'http://api.blog.163.com/cap/captcha.jpgx?parentId=3029649&r=';
+  location.mrt = 'http://b.bst.126.net/newpage/style/mbox/';
+  location.fce = 'http://os.blog.163.com/common/ava.s?host=';
+  location.fce2= 'http://os.blog.163.com/common/ava.s?host=';
+  location.passportfce = 'http://os.blog.163.com/common/ava.s?passport=';
+  location.fpr = 'http://b.bst.126.net/common/portrait/face/preview/';
+  location.f60 = 'http://b.bst.126.net/common/face60.png';
+  location.f140= 'http://b.bst.126.net/common/face140.png';
+  location.f40 = location.f140;
+  location.adf140= 'http://b.bst.126.net/common/admireface140.png';
+  location.ept = 'http://b.bst.126.net/common/empty.png';
+  location.guide_profile_add= 'http://b.bst.126.net/common/guide_profile_add.gif';
+  location.phtoto_dream = 'http://photo.dream.163.com/blog/writeBlogCallback.do';
+  window.CF = {
+    ca:false
+   ,mid:-3
+   ,cb:''
+   ,cc:true
+   ,cd:true
+   ,ce:'-3'
+   ,ck:3
+   ,ci:['api.blog.163.com'
+       ,'http://photo.163.com/photo/html/crossdomain.html?t=20100205'
+        
+        ,'ud.blog.163.com'
+        
+        
+        
+        ]
+   ,cj:[-3]
+   ,cl:''
+   ,cm:["","blog/","album/","music/","collection/","friends/","profile/","pprank/","","loftarchive/"]
+   ,cf:0
+   ,co:{pv:false
+       ,ti:109612735
+       ,tn:''
+       ,tc:0
+       ,tl:3
+       ,ut:0
+       ,un:''
+       ,um:''
+       ,ui:0
+       ,ud:true}
+   ,cp:{nr:1
+       ,cr:1
+       ,vr:10000
+       ,fr:0}
+   ,cs:0
+   ,ct:{'nav':['首页','日志','相册','音乐','收藏','博友','关于我','LOFTER'],'enabled':[0,1,6],'defaultnav':parseInt('11111111',2)}
+   ,cu:false
+   ,cv:true
+   ,cw:false
+  };
+  window.UD = {};
+  UD.host = {
+      userId:3029649
+     ,userName:'zwssd1980'
+     ,nickName:'davidjory'
+     ,imageUpdateTime:-1
+     ,baseUrl:'http://zwssd1980.blog.163.com/'
+     ,gender:'他'
+     ,email:'zwssd1980@163.com'
+     ,photo163Name:'zwssd1980'
+     ,photo163HostName:'zwssd1980'
+     ,TOKEN_HTMLMODULE:''
+     ,isMultiUserBlog:false
+     ,isWumiUser:true
+     ,isNewTemplate:true
+     ,sRank:19900
+  };
+  UD.visitor = {
+     userId:3029649,
+     userName:'zwssd1980',
+     nickName:'davidjory',
+     imageUpdateTime:-1,
+     userType:[12,21],
+     baseUrl:'http://zwssd1980.blog.163.com/',
+     email:'zwssd1980@163.com'
+     ,photo163Name:'zwssd1980'
+     ,photo163VisitorName:'zwssd1980'
+     ,isOnwer:true
+     ,isMultiUserMember:false
+     ,multiUserVisitorRank:10000
+     ,isShowFaXianTip:false
+     ,isShowGuanggaoTip:false
+     ,isLofterInviteTip:false
+     ,isVIP:false
+     ,isShowYXP:false
+     ,isSinaOauthExpired:false
+  };
+</script>
+    <script type="text/javascript" src="http://b1.bst.126.net/newpage/r/j/ec.js?v=1484551956519"></script>
+    <script type="text/javascript" src="http://b1.bst.126.net/newpage/r/j/m/m-3/em.js?v=1484551956519"></script>
+  
+  <script type="text/javascript">
+    
+    
+    new Image().src = 'http://blog.163.com/newpage/images/analyse.png?s=e&t='+new Date().getTime();
+  </script>
+<script>
+window.setTimeout(function(){
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-69204963-1', 'auto');
+  ga('send', 'pageview');
+},300);
+
+
+
+</script> 
+
+
+
+
+<script>
+window.setTimeout(function(){
+    var script = document.createElement('script');
+    script.async = 1;
+    script.src = 'http://b1.bst.126.net/newregflow/res/js/blog_aswlf_V3_1.js';
+    document.body.appendChild(script);
+    
+},300);
+
+</script> 
+    <script type="text/javascript" src="/newpage/prettycode/prettify.js"></script>
+</body>
+</html>
