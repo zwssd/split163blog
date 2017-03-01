@@ -74,7 +74,7 @@ def findFile(fcontent):
 
 # 输入多行文字，写入指定文件并保存到指定文件夹
 def writeFile(writeFilePath,title,date,category,content):
-    fopen = open(writeFilePath+date[0:10]+'-.md', 'w')
+    fopen = open(writeFilePath+date[0:10]+'-'+title+'.md', 'w')
     ftext = '''---
 layout: post
 title:  "'''+title+'''"
