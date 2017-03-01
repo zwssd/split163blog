@@ -8,14 +8,22 @@
 '''
 import os,re
 
+writeFilePath = "/Users/david/mypython/split163blog-git/git_articles/"
+
 # 遍历指定目录，显示目录下的所有文件名
 def eachFile(filepath):
     pathDir = os.listdir(filepath)
     for allDir in pathDir:
         child = os.path.join('%s%s' % (filepath, allDir))
-        print child.decode('gbk')  # .decode('gbk')是解决中文显示乱码问题
-        filename = child.decode('gbk')
-        readFile(filename)
+        print child
+        #print child.decode('gbk')  # .decode('gbk')是解决中文显示乱码问题
+        #win下需要下面的转码
+        #filename = child.decode('gbk')
+        ext = os.path.splitext(child)[1]
+        print ext
+        if ext!='.htm':
+            continue
+        readFile(child)
         exit()
 
 
@@ -40,23 +48,48 @@ def findFile(fcontent):
     strinfo = re.compile('<title>|<.title>|-davidjory.*')
     title = strinfo.sub('', title)
     print title
+    #查找日期,分类
+    res = 'class="blogsep">(.*?)</a>'
+    date_category = re.findall(res,fcontent,re.S)[0]
+    res = '(.*?)</span>'
+    date = re.findall(res,date_category)[0]
+    res = u'&nbsp;&nbsp;分类：</span>(.*)'
+    category = re.findall(res,date_category,re.S)[0]
+    category = filter_tags(category)
+    category = category.replace('\n','')
+    category = category.replace(' ','')
+    category = category.replace('	','')
+    print u'分类=======>>>>>>>>>>>>>'+category
+    #查找标签
+    #res = u'$_blogTagTitle">|&nbsp;&nbsp;标签：</span>(.*?)</span>'
+    #tag = re.findall(res,fcontent)
+    #print tag
+    #print u'标签=======>>>>>>>>>>>>>'+tag
     #查找内容
     res = 'nbw-blog ztag">(.*)<div class="nbw-blog-end'
     content = re.findall(res,fcontent,re.S)[0]
     content = filter_tags(content)
-    print content
+    #print content
+    writeFile(writeFilePath,title,date,category,content)
 
 # 输入多行文字，写入指定文件并保存到指定文件夹
-def writeFile(filename):
-    fopen = open(filename, 'w')
-    print "\r请任意输入多行文字", " ( 输入 .号回车保存)"
-    while True:
-        aLine = raw_input()
-        if aLine != ".":
-            fopen.write('%s%s' % (aLine, os.linesep))
-        else:
-            print "文件已保存!"
-            break
+def writeFile(writeFilePath,title,date,category,content):
+    fopen = open(writeFilePath+date[0:10]+'-.md', 'w')
+    ftext = '''---
+layout: post
+title:  "'''+title+'''"
+date:   '''+date+'''
+categories: '''+category+'''
+tags:
+---
+
+* content
+{:toc}
+
+'''+content+'''
+'''
+    #content.encode("utf8")
+    fopen.write(ftext.encode("utf8"))
     fopen.close()
 
 #将HTML中标签等信息去掉
@@ -111,7 +144,8 @@ def replaceCharEntity(htmlstr):
 if __name__ == '__main__':
     filePath = "D:\\FileDemo\\Java\\myJava.txt"
     filePathI = "D:\\FileDemo\\Python\\pt.py"
-    filePathC = "C:\\Users\\Administrator\\Downloads\\blog_articles\\"
+    #filePathC = "C:\\Users\\Administrator\\Downloads\\blog_articles\\"
+    filePathC = "/Users/david/mypython/split163blog-git/blog_articles/"
     eachFile(filePathC)
     #readFile(filePath)
     #writeFile(filePathI)
