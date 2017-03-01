@@ -24,7 +24,7 @@ def eachFile(filepath):
         if ext!='.htm':
             continue
         readFile(child)
-        exit()
+        #exit()
 
 
 # 读取文件内容并打印
@@ -74,7 +74,10 @@ def findFile(fcontent):
 
 # 输入多行文字，写入指定文件并保存到指定文件夹
 def writeFile(writeFilePath,title,date,category,content):
-    fopen = open(writeFilePath+date[0:10]+'-'+title+'.md', 'w')
+    ftitle = title.replace('.','')
+    ftitle = ftitle.replace('/','')
+    ftitle = ftitle.replace(' ','')
+    fopen = open(writeFilePath+date[0:10]+'-'+ftitle+'.md', 'w')
     ftext = '''---
 layout: post
 title:  "'''+title+'''"
